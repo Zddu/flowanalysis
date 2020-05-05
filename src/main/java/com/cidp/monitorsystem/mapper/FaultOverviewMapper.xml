@@ -27,6 +27,7 @@ UNION all select ip,zhpoint from snmptrap) as tab group by point
         select zhtype as name,count(zhtype) as value from (select zhtype from diagnosis,point where point.id = diagnosis.pid and diagnosis.ip=#{ip}  UNION ALL select zhpoint from snmptrap where ip = #{ip}) as tab group by name
     </select>
 
+
     <select id="selectSpecifiedDeviceFailuresByIpAccordingtoTime" parameterType="string" resultType="com.cidp.monitorsystem.model.EquipmentFailuresNums">
        select zhtype as failuresName,count(zhtype) as num from (select zhtype,ip,time from diagnosis,point where point.id = diagnosis.pid and ip = #{ip} and time &gt;= #{start} and time &lt;= #{end} UNION ALL select zhpoint,ip,time from snmptrap where ip = #{ip} and time &gt;= #{start} and time &lt;= #{end}
         ) as tab group by failuresName
