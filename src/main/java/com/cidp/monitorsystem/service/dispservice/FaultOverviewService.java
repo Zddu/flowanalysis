@@ -38,21 +38,7 @@ public class FaultOverviewService {
 
 
 
-    public FaultOverviewUnder specifiedDeviceFailures(String ip) {
-        FaultOverviewUnder result =new FaultOverviewUnder();
-//        result.setEquipmentFailuresNumList(faultOverviewMapper.selectSpecifiedDeviceFailuresByIp(ip));
-        SixTime sixTime = new SixTime();
-        List<SixTime> timeList = new ArrayList<>();
-        sixTime.setOne(faultOverviewMapper.selectSpecifiedDeviceFailuresByIpAccordingtoTime(ip," 08:00"," 12:00"));
-        sixTime.setTwo(faultOverviewMapper.selectSpecifiedDeviceFailuresByIpAccordingtoTime(ip," 12:00"," 16:00"));
-        sixTime.setThree(faultOverviewMapper.selectSpecifiedDeviceFailuresByIpAccordingtoTime(ip," 16:00"," 20:00"));
-        sixTime.setFour(faultOverviewMapper.selectSpecifiedDeviceFailuresByIpAccordingtoTime(ip," 20:00"," 24:00"));
-        sixTime.setFive(faultOverviewMapper.selectSpecifiedDeviceFailuresByIpAccordingtoTime(ip," 24:00"," 04:00"));
-        sixTime.setSix(faultOverviewMapper.selectSpecifiedDeviceFailuresByIpAccordingtoTime(ip," 04:00"," 08:00"));
-        timeList.add(sixTime);
-        result.setSixTimes(timeList);
-        return result;
-    }
+
 
 
     public List<Equipment> getSelectList() {

@@ -21,10 +21,7 @@ public class FaultOverviewController {
         return faultOverviewService.failuresNums(time);
     }
 
-    @GetMapping("/two")
-    public FaultOverviewUnder specifiedDeviceFailures(String ip){
-        return faultOverviewService.specifiedDeviceFailures(ip);
-    }
+
 
     @GetMapping("/select")
     public List<Equipment> getList(){
