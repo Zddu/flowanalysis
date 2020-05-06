@@ -9,7 +9,7 @@ import com.cidp.monitorsystem.service.ArpService;
 import com.cidp.monitorsystem.service.SystemService;
 import com.cidp.monitorsystem.util.ListUtil;
 import com.cidp.monitorsystem.util.getSnmp.SNMPSessionUtil;
-import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
+
 import org.snmp4j.PDU;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
