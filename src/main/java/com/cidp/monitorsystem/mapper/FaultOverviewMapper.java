@@ -1,7 +1,6 @@
 package com.cidp.monitorsystem.mapper;
 
 import com.cidp.monitorsystem.model.*;
-import com.sun.xml.internal.ws.wsdl.writer.document.Fault;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -23,5 +22,7 @@ public interface FaultOverviewMapper {
 
     List<Pie> selectSpecifiedDeviceFailuresByIp(@Param("ip") String ip);
 
-    List<EquipmentFailuresNums> selectSpecifiedDeviceFailuresByIpAccordingtoTime(@Param("ip") String ip,@Param("start") String s,@Param("end") String s1);
+    Integer selectSpecifiedDeviceFailuresByIpAccordingtoTime(@Param("ip") String ip,@Param("faultName") String faultName,@Param("start") String start,@Param("end") String end);
+
+    List<String> selectFaultbyIp(@Param("ip") String ip);
 }

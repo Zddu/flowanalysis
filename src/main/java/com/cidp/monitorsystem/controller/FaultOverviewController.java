@@ -21,8 +21,10 @@ public class FaultOverviewController {
         return faultOverviewService.failuresNums(time);
     }
 
-
-
+    @GetMapping("/timeSlot")
+    public List<Series> faultByTimeSlot(String ip){
+        return  faultOverviewService.faultByTimeSlot(ip);
+    }
     @GetMapping("/select")
     public List<Equipment> getList(){
         return faultOverviewService.getSelectList();
@@ -31,4 +33,5 @@ public class FaultOverviewController {
     public List<Pie> getPieData(String ip){
         return faultOverviewService.getPieData(ip);
     }
+
 }
