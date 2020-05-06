@@ -29,7 +29,7 @@ UNION all select ip,zhpoint from snmptrap) as tab group by point
 
 
     <select id="selectSpecifiedDeviceFailuresByIpAccordingtoTime" parameterType="string" resultType="integer">
-        select count(zhtype) from (select zhtype,ip,time from diagnosis,point where point.id = diagnosis.pid and ip = #{ip} and DATE_FORMAT(time,"%H:%i:%s") &gt; #{start} and DATE_FORMAT(time,"%H:%i:%s") &lt;= #{end} and point.zhtype = #{faultName} UNION ALL select zhpoint,ip,time from snmptrap where ip = #{ip} and DATE_FORMAT(time,"%H:%i:%s") &gt; #{start} and DATE_FORMAT(time,"%H:%i:%s") &lt;= #{end} and snmptrap.zhpoint =#{faultName}
+        select count(zhtype) from (select zhtype,ip,time from diagnosis,point where point.id = diagnosis.pid and ip = #{ip} and DATE_FORMAT(time,"%H:%i:%s") &gt;= #{start} and DATE_FORMAT(time,"%H:%i:%s") &lt; #{end} and point.zhtype = #{faultName} UNION ALL select zhpoint,ip,time from snmptrap where ip = #{ip} and DATE_FORMAT(time,"%H:%i:%s") &gt;= #{start} and DATE_FORMAT(time,"%H:%i:%s") &lt; #{end} and snmptrap.zhpoint =#{faultName}
         ) as tab
     </select>
 
