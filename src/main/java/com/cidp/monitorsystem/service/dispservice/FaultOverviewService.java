@@ -46,7 +46,6 @@ public class FaultOverviewService {
 
     public List<Series> faultByTimeSlot(String ip) {
         List<Series> result =new ArrayList<>();
-
         //通过ip查询出该ip出现的故障
         List<String> FaultNames=faultOverviewMapper.selectFaultbyIp(ip);
         //将结果赋值给结果集合并且通过ip和故障名称查询指定故障出现次数
