@@ -11,21 +11,21 @@ public interface DiagnosisMapper {
 
     void insertByDia(Diagnosis d);
 
-    List<Diagnosis> getAllInfo();
+    List<Diagnosis> getPageInfoByStatus(Integer status);
 
     Integer updateRemark(@Param("desc") String desc, @Param("id") String id);
 
     String getRemark(@Param("id") String id);
 
-    Integer updateIgnore(@Param("id") String id);
-
-    Integer deleteById(@Param("id") String id);
-
-    List<ExportDiagnosis> selectUnhandledDiagnosisInfo();
-
-    List<ExportDiagnosis> selectProcessedDiagnosisInfo();
-
-    List<ExportDiagnosis> selectIgnoreDiagnosisInfo();
-
     List<Diagnosis> selectDiagnosisByIPAndzhtype(@Param("ip") String ip,@Param("zhtype") String zhtype);
+
+    Diagnosis selectDiagnosisByID(@Param("id") String id);
+
+    Integer updateProcessStatus(@Param("desc") String desc,@Param("ids") String ids);
+
+    Integer updateIgnoreStatus(@Param("ids") String ids);
+
+    Integer deleteByInforAndStatus(@Param("ids") String ids);
+
+    String[] selectIdsByIpDiagnosisAndTime(@Param("ip") String ip,@Param("zhtype") String zhtype,@Param("time") String time,@Param("status") String status);
 }
