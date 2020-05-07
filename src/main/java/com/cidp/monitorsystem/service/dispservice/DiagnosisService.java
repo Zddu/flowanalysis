@@ -128,7 +128,7 @@ public class DiagnosisService {
             return -1;
         }
         //设置状态为修改
-        String[] idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
+        List<Integer> idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
 
         return diagnosisMapper.updateProcessStatus(desc, GetSpecialString.getCommaSeparated(idlist));
     }
@@ -140,7 +140,7 @@ public class DiagnosisService {
             if (diagnosis==null){
                 return -1;
             }
-            String[] idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
+            List<Integer> idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
 
             result=diagnosisMapper.updateProcessStatus(desc,GetSpecialString.getCommaSeparated(idlist));
         }
@@ -152,7 +152,7 @@ public class DiagnosisService {
         if (diagnosis==null){
             return -1;
         }
-        String[] idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
+        List<Integer> idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
         return diagnosisMapper.updateIgnoreStatus(GetSpecialString.getCommaSeparated(idlist));
     }
     @Transactional
@@ -163,7 +163,7 @@ public class DiagnosisService {
             if (diagnosis==null){
                 return -1;
             }
-            String[] idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
+            List<Integer> idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
             result = diagnosisMapper.updateIgnoreStatus(GetSpecialString.getCommaSeparated(idlist));
         }
         return result;
@@ -174,9 +174,10 @@ public class DiagnosisService {
         if (diagnosis==null){
             return -1;
         }
-        String[] idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
+        List<Integer> idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
         return diagnosisMapper.deleteByInforAndStatus(GetSpecialString.getCommaSeparated(idlist));
     }
+
     @Transactional
     public Integer checkDeleteById(String[] ids) {
         Integer result=-1;
@@ -185,16 +186,11 @@ public class DiagnosisService {
             if (diagnosis==null){
                 return -1;
             }
-            String[] idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
+            List<Integer> idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
             result = diagnosisMapper.deleteByInforAndStatus(GetSpecialString.getCommaSeparated(idlist));
         }
         return result;
     }
-
-
-
-
-
 
     public String getRemark(String id) {
         return diagnosisMapper.getRemark(id);
