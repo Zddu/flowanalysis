@@ -46,25 +46,25 @@ public class DiagnosisController {
     }
 
     //单个处理
-    @PostMapping("/process")
+    @PutMapping("/process")
     public RespBean remark(@RequestParam String desc,@RequestParam String id){
         return diagnosisService.updateRemark(desc,id)==1 ? RespBean.ok("更新成功!") :RespBean.error("更新失败!");
     }
 
     //选中处理多个
-    @PostMapping("/check/process")
+    @PutMapping("/check/process")
     public RespBean updateSelectRemark(@RequestParam String desc,@RequestParam String[] ids){
        return diagnosisService.updateSelectRemark(desc,ids)==1 ? RespBean.ok("更新成功!") :RespBean.error("更新失败!");
     }
 
     //单个忽略
-    @PostMapping("/ignore")
+    @PutMapping("/ignore")
     public RespBean ignore(@RequestParam String id){
         return diagnosisService.ignoreById(id)==1 ? RespBean.ok("更新成功!") :RespBean.error("更新失败!");
     }
 
     //选中忽略多个
-    @PostMapping("/check/ignore")
+    @PutMapping("/check/ignore")
     public RespBean checkIgnore(@RequestParam String[] ids){
         return diagnosisService.checkIgnoreById(ids)==1 ? RespBean.ok("更新成功!") :RespBean.error("更新失败!");
     }
