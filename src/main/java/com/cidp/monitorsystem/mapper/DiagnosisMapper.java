@@ -27,5 +27,5 @@ public interface DiagnosisMapper {
 
     Integer deleteByInforAndStatus(@Param("ids") String ids);
 
-    String[] selectIdsByIpDiagnosisAndTime(@Param("ip") String ip,@Param("zhtype") String zhtype,@Param("time") String time,@Param("status") String status);
+    List<Integer> selectIdsByIpDiagnosisAndTime(@Param("ip") String ip,@Param("zhtype") String zhtype,@Param("time") String time,@Param("status") String status);
 }

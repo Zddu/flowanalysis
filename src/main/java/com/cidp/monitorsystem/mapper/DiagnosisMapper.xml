@@ -66,7 +66,7 @@
         delete from diagnosis  where id  in (${ids})
     </delete>
 
-    <select id="selectIdsByIpDiagnosisAndTime" parameterType="string" resultType="string">
+    <select id="selectIdsByIpDiagnosisAndTime" parameterType="string" resultType="integer">
         select diagnosis.id from diagnosis,point where point.id=diagnosis.pid and diagnosis.ip=#{ip} and point.zhtype = #{zhtype} and time &lt;=#{time} and status = #{status}
     </select>
 </mapper>
