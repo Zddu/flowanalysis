@@ -5,6 +5,7 @@ import com.cidp.monitorsystem.model.Diagnosis;
 import com.cidp.monitorsystem.model.ExportDiagnosis;
 import com.cidp.monitorsystem.model.TrapCollect;
 import com.cidp.monitorsystem.service.*;
+import com.cidp.monitorsystem.util.GetSpecialString;
 import com.cidp.monitorsystem.util.ListUtil;
 import com.cidp.monitorsystem.util.ip.Ping;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sound.midi.Soundbank;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -97,19 +99,102 @@ public class DiagnosisService {
             diagnosisMapper.insertByDia(d);
         }
     }
-    public List<Diagnosis> getAllInfo() {
-        List<Diagnosis> info = diagnosisMapper.getAllInfo();
+    public List<Diagnosis> getPageInfoByStatus(Integer status) {
+        //获取聚合过的ip和异常名称
+        List<Diagnosis> info = diagnosisMapper.getPageInfoByStatus(status);
 
         for (Diagnosis diagnosis : info) {
+            //查询出最新的数据
             List<Diagnosis> lists = diagnosisMapper.selectDiagnosisByIPAndzhtype(diagnosis.getIp(),diagnosis.getCheck().getZhtype());
+            //插入最新时间
             diagnosis.setNewTime(lists.get(0).getTime());
+            //插入最开始出现的时间
+            diagnosis.setIp(lists.get(0).getIp());
+            diagnosis.setTime(lists.get(lists.size()-1).getTime());
+            diagnosis.setCause(lists.get(0).getCause());
+            diagnosis.setRank(lists.get(0).getRank());
+            diagnosis.setCheck(lists.get(0).getCheck());
+            diagnosis.setStatus(lists.get(0).getStatus());
+            diagnosis.setId(lists.get(0).getId());
             diagnosis.setFrequency(lists.size());
         }
         return  info;
     }
     public Integer updateRemark( String desc, String id) {
-        return diagnosisMapper.updateRemark(desc,id);
+        //通过id出指定的ip以及异常点
+        Diagnosis diagnosis =diagnosisMapper.selectDiagnosisByID(id);
+
+        if (diagnosis==null){
+            return -1;
+        }
+        //设置状态为修改
+        String[] idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
+
+        return diagnosisMapper.updateProcessStatus(desc, GetSpecialString.getCommaSeparated(idlist));
     }
+    @Transactional
+    public Integer updateSelectRemark(String desc, String[] ids) {
+        Integer result=-1;
+        for (String id : ids) {
+            Diagnosis diagnosis =diagnosisMapper.selectDiagnosisByID(id);
+            if (diagnosis==null){
+                return -1;
+            }
+            String[] idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
+
+            result=diagnosisMapper.updateProcessStatus(desc,GetSpecialString.getCommaSeparated(idlist));
+        }
+        return result;
+    }
+
+    public Integer ignoreById( String id) {
+        Diagnosis diagnosis =diagnosisMapper.selectDiagnosisByID(id);
+        if (diagnosis==null){
+            return -1;
+        }
+        String[] idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
+        return diagnosisMapper.updateIgnoreStatus(GetSpecialString.getCommaSeparated(idlist));
+    }
+    @Transactional
+    public Integer checkIgnoreById(String[] ids) {
+        Integer result=-1;
+        for (String id : ids) {
+            Diagnosis diagnosis = diagnosisMapper.selectDiagnosisByID(id);
+            if (diagnosis==null){
+                return -1;
+            }
+            String[] idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
+            result = diagnosisMapper.updateIgnoreStatus(GetSpecialString.getCommaSeparated(idlist));
+        }
+        return result;
+    }
+
+    public Integer deleteById(String id) {
+        Diagnosis diagnosis = diagnosisMapper.selectDiagnosisByID(id);
+        if (diagnosis==null){
+            return -1;
+        }
+        String[] idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
+        return diagnosisMapper.deleteByInforAndStatus(GetSpecialString.getCommaSeparated(idlist));
+    }
+    @Transactional
+    public Integer checkDeleteById(String[] ids) {
+        Integer result=-1;
+        for (String id : ids) {
+            Diagnosis diagnosis = diagnosisMapper.selectDiagnosisByID(id);
+            if (diagnosis==null){
+                return -1;
+            }
+            String[] idlist= diagnosisMapper.selectIdsByIpDiagnosisAndTime(diagnosis.getIp(),diagnosis.getCheck().getZhtype(),diagnosis.getTime(),String.valueOf(diagnosis.getStatus()));
+            result = diagnosisMapper.deleteByInforAndStatus(GetSpecialString.getCommaSeparated(idlist));
+        }
+        return result;
+    }
+
+
+
+
+
 
     public String getRemark(String id) {
         return diagnosisMapper.getRemark(id);
@@ -117,58 +202,34 @@ public class DiagnosisService {
 
 
 
-    @Transactional
-    public int updateCheckremark(String desc, String[] ids) {
-        Integer result=-1;
-        for (String id : ids) {
-            result=diagnosisMapper.updateRemark(desc,id);
+    public List<ExportDiagnosis> selectDiagnosisInfo(Integer status) {
+        List<ExportDiagnosis> result =new ArrayList<>();
+        //按状态分组
+        List<Diagnosis> info = diagnosisMapper.getPageInfoByStatus(status);
+        for (Diagnosis diagnosis : info) {
+            //查询出最新的数据
+            ExportDiagnosis item =new ExportDiagnosis();
+            List<Diagnosis> lists = diagnosisMapper.selectDiagnosisByIPAndzhtype(diagnosis.getIp(),diagnosis.getCheck().getZhtype());
+            //插入ip
+            item.setIp(lists.get(0).getIp());
+            //插入最新时间
+            item.setNewTime(lists.get(0).getTime());
+            //插入最开始出现的时间
+            item.setTime(lists.get(lists.size()-1).getTime());
+            item.setCause(lists.get(0).getCause());
+            item.setRank(lists.get(0).getRank());
+            item.setZhtype(lists.get(0).getCheck().getZhtype());
+            item.setStatus(lists.get(0).getStatus());
+            item.setId(lists.get(0).getId());
+            item.setFrequency(lists.size());
+            result.add(item);
         }
         return result;
     }
 
-    public Integer updateIgnore( String id) {
-        return diagnosisMapper.updateIgnore(id);
-    }
-    @Transactional
-    public Integer updateCheckIgnore(String[] ids) {
-        Integer result=-1;
-        for (String id : ids) {
-            result=diagnosisMapper.updateIgnore(id);
-        }
-        return result;
-    }
 
-    public Integer deleteById(String id) {
-        return diagnosisMapper.deleteById(id);
-    }
 
-    public List<ExportDiagnosis> selectUnhandledDiagnosisInfo() {
-        return diagnosisMapper.selectUnhandledDiagnosisInfo();
-    }
 
-    public List<ExportDiagnosis> selectProcessedDiagnosisInfo() {
-        return diagnosisMapper.selectProcessedDiagnosisInfo();
-    }
 
-    public List<ExportDiagnosis> selectIgnoreDiagnosisInfo() {
-        return diagnosisMapper.selectIgnoreDiagnosisInfo();
-    }
 
-    @Transactional
-    public Integer checkDeleteById(String[] ids) {
-        Integer result=-1;
-        for (String id : ids) {
-            result=diagnosisMapper.deleteById(id);
-        }
-        return result;
-    }
-
-    @Transactional
-    public Integer updateSelectRemark(String desc, String[] ids) {
-        Integer result=-1;
-        for (String id : ids) {
-            result=diagnosisMapper.updateRemark(desc,id);
-        }
-        return result;
-    }
 }
