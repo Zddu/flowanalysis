@@ -54,7 +54,7 @@ public class DiagnosisController {
     //选中处理多个
     @PutMapping("/check/process")
     public RespBean updateSelectRemark(@RequestParam String desc,@RequestParam String[] ids){
-       return diagnosisService.updateSelectRemark(desc,ids)==1 ? RespBean.ok("更新成功!") :RespBean.error("更新失败!");
+       return diagnosisService.updateSelectRemark(desc,ids)==ids.length ? RespBean.ok("更新成功!") :RespBean.error("更新失败!");
     }
 
     //单个忽略
@@ -66,7 +66,7 @@ public class DiagnosisController {
     //选中忽略多个
     @PutMapping("/check/ignore")
     public RespBean checkIgnore(@RequestParam String[] ids){
-        return diagnosisService.checkIgnoreById(ids)==1 ? RespBean.ok("更新成功!") :RespBean.error("更新失败!");
+        return diagnosisService.checkIgnoreById(ids)==ids.length ? RespBean.ok("更新成功!") :RespBean.error("更新失败!");
     }
 
     //单个删除
@@ -78,7 +78,7 @@ public class DiagnosisController {
     //选中删除多个
     @DeleteMapping("/check/delete")
     public RespBean checkDelete(@RequestParam String[] ids){
-        return diagnosisService.checkDeleteById(ids)==1 ? RespBean.ok("更新成功!") :RespBean.error("更新失败!");
+        return diagnosisService.checkDeleteById(ids)==ids.length ? RespBean.ok("更新成功!") :RespBean.error("更新失败!");
     }
 
     //导出未处理警告
