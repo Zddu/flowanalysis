@@ -3,7 +3,7 @@ package com.cidp.monitorsystem.controller;
 import com.cidp.monitorsystem.model.Cpu;
 import com.cidp.monitorsystem.model.InterFlow;
 import com.cidp.monitorsystem.model.Memory;
-import com.cidp.monitorsystem.service.DeviceViewService;
+import com.cidp.monitorsystem.service.dispservice.DeviceViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.RequestMapping;

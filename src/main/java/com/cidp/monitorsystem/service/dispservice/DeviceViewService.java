@@ -1,4 +1,4 @@
-package com.cidp.monitorsystem.service;
+package com.cidp.monitorsystem.service.dispservice;
 
 import com.cidp.monitorsystem.mapper.DeviceViewMapper;
 import com.cidp.monitorsystem.model.Cpu;
