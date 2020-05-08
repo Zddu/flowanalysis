@@ -1,0 +1,35 @@
+package com.cidp.monitorsystem.service;
+
+import com.cidp.monitorsystem.mapper.DeviceViewMapper;
+import com.cidp.monitorsystem.model.Cpu;
+import com.cidp.monitorsystem.model.InterFlow;
+import com.cidp.monitorsystem.model.Memory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+
+import java.util.List;
+
+/**
+ * @date 2020/5/8 -- 7:47
+ **/
+@Service
+public class DeviceViewService {
+    @Autowired
+    private DeviceViewMapper deviceViewMapper;
+    public List<Cpu> getCupInfoByIp(String ip) {
+        return deviceViewMapper.selectCupByIp(ip);
+    }
+
+    public List<Memory> getMemoryInfoByIp(String ip) {
+        return deviceViewMapper.selectMemoryByIp(ip);
+    }
+
+    public List<InterFlow> getInfaceInfo(String ip) {
+        return deviceViewMapper.selectInterfaceByIp(ip);
+    }
+
+    public List<InterFlow> getInfaceflow(String ip, String interDescr) {
+        return deviceViewMapper.selectInterfaceflowByInter(ip,interDescr);
+    }
+}
