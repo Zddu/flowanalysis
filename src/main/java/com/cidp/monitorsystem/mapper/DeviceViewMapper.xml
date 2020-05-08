@@ -9,8 +9,8 @@
         select * from memory where ip = #{ip} order by time desc
     </select>
 
-    <select id="selectInterfaceByIp" resultType="com.cidp.monitorsystem.model.InterFlow">
-        select ip,interDescr from InterFlow where ip = #{ip} order by time desc
+    <select id="selectInterfaceByIp" resultType="com.cidp.monitorsystem.model.Interface">
+        select ip,ifDescr from interface where ip = #{ip} order by time desc
     </select>
     <select id="selectInterfaceflowByInter" resultType="com.cidp.monitorsystem.model.InterFlow">
         select * from InterFlow where ip = #{ip} and  interDescr = #{interDescr}

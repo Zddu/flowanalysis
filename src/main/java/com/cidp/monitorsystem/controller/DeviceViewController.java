@@ -2,6 +2,7 @@ package com.cidp.monitorsystem.controller;
 
 import com.cidp.monitorsystem.model.Cpu;
 import com.cidp.monitorsystem.model.InterFlow;
+import com.cidp.monitorsystem.model.Interface;
 import com.cidp.monitorsystem.model.Memory;
 import com.cidp.monitorsystem.service.dispservice.DeviceViewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class DeviceViewController {
     }
     //返回服务器接口信息
     @RequestMapping("/getinterface")
-    public List<InterFlow> showInterfaceName(@RequestParam String ip){
+    public List<Interface> showInterfaceName(@RequestParam String ip){
         return deviceViewService.getInfaceInfo(ip);
     }
     //接口流量信息
