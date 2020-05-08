@@ -1,12 +1,10 @@
 package com.cidp.monitorsystem.controller;
 
-import com.cidp.monitorsystem.model.Cpu;
-import com.cidp.monitorsystem.model.InterFlow;
-import com.cidp.monitorsystem.model.Interface;
-import com.cidp.monitorsystem.model.Memory;
+import com.cidp.monitorsystem.model.*;
 import com.cidp.monitorsystem.service.dispservice.DeviceViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +21,10 @@ import java.util.List;
 public class DeviceViewController {
     @Autowired
     private DeviceViewService deviceViewService;
+    @GetMapping("/select")
+    public List<SystemInfo> getDevices(){
+        return deviceViewService.getDevices();
+    }
     //cpu使用率
     @RequestMapping("/getcup")
     public List<Cpu> showCpu(@RequestParam String ip){

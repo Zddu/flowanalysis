@@ -1,10 +1,7 @@
 package com.cidp.monitorsystem.service.dispservice;
 
 import com.cidp.monitorsystem.mapper.DeviceViewMapper;
-import com.cidp.monitorsystem.model.Cpu;
-import com.cidp.monitorsystem.model.InterFlow;
-import com.cidp.monitorsystem.model.Interface;
-import com.cidp.monitorsystem.model.Memory;
+import com.cidp.monitorsystem.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +29,9 @@ public class DeviceViewService {
 
     public List<InterFlow> getInfaceflow(String ip, String interDescr) {
         return deviceViewMapper.selectInterfaceflowByInter(ip,interDescr);
+    }
+
+    public List<SystemInfo> getDevices() {
+        return deviceViewMapper.getDevice();
     }
 }

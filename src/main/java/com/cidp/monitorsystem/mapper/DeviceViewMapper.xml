@@ -15,4 +15,7 @@
     <select id="selectInterfaceflowByInter" resultType="com.cidp.monitorsystem.model.InterFlow">
         select * from InterFlow where ip = #{ip} and  interDescr = #{interDescr}
     </select>
+    <select id="getDevice" resultType="com.cidp.monitorsystem.model.SystemInfo">
+        select * from system where sysObjectID &lt;&gt; 'SNMP未响应'
+    </select>
 </mapper>
