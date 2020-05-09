@@ -19,6 +19,7 @@
         select ip , name from system where sysObjectID &lt;&gt; 'SNMP未响应'
     </select>
     <select id="selecAllInfaceFlow" resultType="com.cidp.monitorsystem.model.InterFlow">
-       select ip,round(sum(inFlow),2) as inFlow,round(sum(outFlow),2) as outFlow,round(sum(inLoss),2) as inLoss,round(sum(outLoss),2) as outLoss,round(sum(inRate),2) as inRate,round(sum(outRate)) as outRate,round(sum(inErrorRate),2) as inErrorRate,round(sum(outErrorRate),2) as outErrorRate from InterFlow where ip = #{ip} group by ip
+       select ip,time,round(sum(inFlow),2) as inFlow,round(sum(outFlow),2) as outFlow,round(sum(inLoss),2) as inLoss,round(sum(outLoss),2) as outLoss,round(sum(inRate),2) as inRate,round(sum(outRate)) as outRate,round(sum(inErrorRate),2) as inErrorRate,round(sum(outErrorRate),2) as outErrorRate
+       from InterFlow where ip = #{ip} group by ip,time
     </select>
 </mapper>
