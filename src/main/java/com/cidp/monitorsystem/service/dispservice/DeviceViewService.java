@@ -35,7 +35,7 @@ public class DeviceViewService {
         return deviceViewMapper.getDevice();
     }
 
-    public InterFlow getAllInfaceflow(String ip) {
+    public List<InterFlow> getAllInfaceflow(String ip) {
         return deviceViewMapper.selecAllInfaceFlow(ip);
     }
 }

@@ -13,7 +13,7 @@
         select ip,ifDescr from interface where ip = #{ip}
     </select>
     <select id="selectInterfaceflowByInter" resultType="com.cidp.monitorsystem.model.InterFlow">
-        select * from InterFlow where ip = #{ip} and  interDescr = #{interDescr}
+        select * from InterFlow where ip = #{ip} and  interDescr = #{interDescr} order by time asc
     </select>
     <select id="getDevice" resultType="com.cidp.monitorsystem.model.SystemInfo">
         select ip , name from system where sysObjectID &lt;&gt; 'SNMP未响应'

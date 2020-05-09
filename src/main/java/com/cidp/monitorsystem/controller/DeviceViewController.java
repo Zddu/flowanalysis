@@ -48,7 +48,7 @@ public class DeviceViewController {
 
     //接口总流量
     @RequestMapping("/getAllInterflow")
-    public InterFlow getAllInterflow(@RequestParam String ip){
+    public List<InterFlow> getAllInterflow(@RequestParam String ip){
         return deviceViewService.getAllInfaceflow(ip);
     }
 }

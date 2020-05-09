@@ -22,5 +22,5 @@ public interface DeviceViewMapper {
 
     List<SystemInfo> getDevice();
 
-    InterFlow selecAllInfaceFlow(@Param("ip") String ip);
+    List<InterFlow> selecAllInfaceFlow(@Param("ip") String ip);
 }
