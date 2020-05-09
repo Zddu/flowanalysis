@@ -45,4 +45,10 @@ public class DeviceViewController {
     public List<InterFlow> showInterflow(@RequestParam String ip,@RequestParam String interName){
         return deviceViewService.getInfaceflow(ip,interName);
     }
+
+    //接口总流量
+    @RequestMapping("/getAllInterflow")
+    public InterFlow getAllInterflow(@RequestParam String ip){
+        return deviceViewService.getAllInfaceflow(ip);
+    }
 }
