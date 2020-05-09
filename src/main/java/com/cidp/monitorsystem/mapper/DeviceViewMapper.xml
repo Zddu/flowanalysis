@@ -26,6 +26,6 @@
       select ip,ifDescr from interface where ip = #{ip} and ifDescr not like '%VLAN%'
     </select>
     <select id="selectInfaceInfoFilterEmptydata" resultType="com.cidp.monitorsystem.model.Interface">
-        select ip,interDescr as ifDescr from InterFlow where ip = #{ip} and (inFlow <![CDATA[ <> ]]> 0 or outFlow <![CDATA[ <> ]]> 0 or inLoss <![CDATA[ <> ]]> 0 or outLoss <![CDATA[ <> ]]> 0 or inRate <![CDATA[ <> ]]> 0 or outRate <![CDATA[ <> ]]> 0 or inErrorRate <![CDATA[ <> ]]> 0 or outErrorRate <![CDATA[ <> ]]> 0)
+        select ip,interDescr as ifDescr from InterFlow where ip = #{ip} group by InterFlow.interDescr having (sum(inFlow) <![CDATA[ <> ]]> 0 or sum(outFlow) <![CDATA[ <> ]]> 0 or sum(inLoss) <![CDATA[ <> ]]> 0 or sum(outLoss) <![CDATA[ <> ]]> 0 or sum(inRate) <![CDATA[ <> ]]> 0 or sum(outRate) <![CDATA[ <> ]]> 0 or sum(inErrorRate) <![CDATA[ <> ]]> 0 or sum(outErrorRate) <![CDATA[ <> ]]> 0) and interDescr not like '%Vlan%'
     </select>
 </mapper>
