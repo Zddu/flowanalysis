@@ -51,4 +51,16 @@ public class DeviceViewController {
     public List<InterFlow> getAllInterflow(@RequestParam String ip){
         return deviceViewService.getAllInfaceflow(ip);
     }
+
+    //过滤vlan
+    @RequestMapping("/filtervlan")
+    public List<Interface> filtervlan(@RequestParam String ip){
+        return deviceViewService.getInfaceInfoFilterVlan(ip);
+    }
+
+    //过滤空数据
+    @RequestMapping("/filteremptydata")
+    public List<Interface> filteremptydata(@RequestParam String ip){
+        return deviceViewService.getInfaceInfoFilterEmptydata(ip);
+    }
 }

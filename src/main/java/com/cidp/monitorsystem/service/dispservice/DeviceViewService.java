@@ -38,4 +38,12 @@ public class DeviceViewService {
     public List<InterFlow> getAllInfaceflow(String ip) {
         return deviceViewMapper.selecAllInfaceFlow(ip);
     }
+
+    public List<Interface> getInfaceInfoFilterVlan(String ip) {
+        return deviceViewMapper.selectInterfaceFilterVlanByIp(ip);
+    }
+
+    public List<Interface> getInfaceInfoFilterEmptydata(String ip) {
+        return deviceViewMapper.selectInfaceInfoFilterEmptydata(ip);
+    }
 }

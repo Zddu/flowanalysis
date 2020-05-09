@@ -23,4 +23,8 @@ public interface DeviceViewMapper {
     List<SystemInfo> getDevice();
 
     List<InterFlow> selecAllInfaceFlow(@Param("ip") String ip);
+
+    List<Interface> selectInterfaceFilterVlanByIp(@Param("ip") String ip);
+
+    List<Interface> selectInfaceInfoFilterEmptydata(@Param("ip") String ip);
 }
