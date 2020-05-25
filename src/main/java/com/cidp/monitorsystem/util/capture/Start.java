@@ -12,16 +12,16 @@ import java.util.concurrent.TimeoutException;
 
 public class Start {
     public static void main(String[] args) throws UnknownHostException, PcapNativeException, EOFException, TimeoutException, NotOpenException {
-        InetAddress addr = InetAddress.getByName("192.168.0.13");
+        InetAddress addr = InetAddress.getByName("localhost");
         PcapNetworkInterface nif = Pcaps.getDevByAddress(addr);
         int snapLen = 65536;
         PcapNetworkInterface.PromiscuousMode mode = PcapNetworkInterface.PromiscuousMode.PROMISCUOUS;
-        int timeout = 10;
+        int timeout = 100;
         PcapHandle handle = nif.openLive(snapLen, mode, timeout);
         Packet packet = handle.getNextPacketEx();
         handle.close();
         IpV4Packet ipV4Packet = packet.get(IpV4Packet.class);
         Inet4Address srcAddr = ipV4Packet.getHeader().getSrcAddr();
-        System.out.println(srcAddr);
+        System.out.println(ipV4Packet);
     }
 }
