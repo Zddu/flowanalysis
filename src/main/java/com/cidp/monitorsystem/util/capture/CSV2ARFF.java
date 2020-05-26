@@ -19,6 +19,7 @@ public class CSV2ARFF {
             // load the CSV file (input file)
             CSVLoader loader = new CSVLoader();
             loader.setSource(new File(f1));
+
             String [] options = new String[1];
             options[0]="-H";
             loader.setOptions(options);
