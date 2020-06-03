@@ -581,139 +581,153 @@ public class BasicFlow {
         }
     }
 
-    public String dumpFlowBasedFeatures() {
-        String dump = "";
-        dump += this.flowId + ",";
-        dump += FormatUtils.ip(src) + ",";
-        dump += getSrcPort() + ",";
-        dump += FormatUtils.ip(dst) + ",";
-        dump += getDstPort() + ",";
-        dump += getProtocol() + ",";
-        //dump+=this.flowStartTime+",";
-        dump += DateFormatter.parseDateFromLong(this.flowStartTime / 1000L, "dd/MM/yyyy hh:mm:ss") + ",";
+    public  double[] dumpFlowBasedFeatures(int nums) {
         long flowDuration = this.flowLastSeen - this.flowStartTime;
-        dump += flowDuration + ",";
-        dump += this.fwdPktStats.getN() + ",";
-        dump += this.bwdPktStats.getN() + ",";
-        dump += this.fwdPktStats.getSum() + ",";
-        dump += this.bwdPktStats.getSum() + ",";
+        double[] data = new double[nums];
+        data[0] = getSrcPort();  //1
+        data[1] = getDstPort();  //2
+        data[2] = getProtocol();    //3
+        data[3] = flowDuration;     //4
+        data[4] = this.fwdPktStats.getN();
+        data[5] = this.bwdPktStats.getN();
+        data[6] = this.fwdPktStats.getSum();
+        data[7] = this.bwdPktStats.getSum();
         if (fwdPktStats.getN() > 0L) {
-            dump += this.fwdPktStats.getMax() + ",";
-            dump += this.fwdPktStats.getMin() + ",";
-            dump += this.fwdPktStats.getMean() + ",";
-            dump += this.fwdPktStats.getStandardDeviation() + ",";
+            data[8] = this.fwdPktStats.getMax();
+            data[9] = this.fwdPktStats.getMin();
+            data[10] = this.fwdPktStats.getMean();
+            data[11] = this.fwdPktStats.getStandardDeviation();
         } else {
-            dump += "0,0,0,0,";
+            data[8] = 0;
+            data[9] = 0;
+            data[10] = 0;
+            data[11] = 0;
         }
         if (bwdPktStats.getN() > 0L) {
-            dump += this.bwdPktStats.getMax() + ",";
-            dump += this.bwdPktStats.getMin() + ",";
-            dump += this.bwdPktStats.getMean() + ",";
-            dump += this.bwdPktStats.getStandardDeviation() + ",";
+            data[12] = this.bwdPktStats.getMax();
+            data[13] = this.bwdPktStats.getMin();
+            data[14] = this.bwdPktStats.getMean();
+            data[15] = this.bwdPktStats.getStandardDeviation();
         } else {
-            dump += "0,0,0,0,";
+            data[12] = 0;
+            data[13] = 0;
+            data[14] = 0;
+            data[15] = 0;
         }
-        // flow duration is in microseconds, therefore packets per seconds = packets / (duration/1000000)
-        dump += ((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L) + ",";
-        dump += ((double) packetCount()) / ((double) flowDuration / 1000000L) + ",";
-        dump += this.flowIAT.getMean() + ",";
-        dump += this.flowIAT.getStandardDeviation() + ",";
-        dump += this.flowIAT.getMax() + ",";
-        dump += this.flowIAT.getMin() + ",";
+
+        data[16]= ((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L);
+        data[17]= ((double) packetCount()) / ((double) flowDuration / 1000000L);
+        data[18]= this.flowIAT.getMean();
+        data[19]= this.flowIAT.getStandardDeviation();
+        data[20]= this.flowIAT.getMax() ;
+        data[21]= this.flowIAT.getMin();
         if (this.forward.size() > 1) {
-            dump += this.forwardIAT.getSum() + ",";
-            dump += this.forwardIAT.getMean() + ",";
-            dump += this.forwardIAT.getStandardDeviation() + ",";
-            dump += this.forwardIAT.getMax() + ",";
-            dump += this.forwardIAT.getMin() + ",";
+            data[22]= this.forwardIAT.getSum();
+            data[23]= this.forwardIAT.getMean();
+            data[24]= this.forwardIAT.getStandardDeviation();
+            data[25]= this.forwardIAT.getMax();
+            data[26]= this.forwardIAT.getMin();
         } else {
-            dump += "0,0,0,0,0,";
+            data[22] = 0;
+            data[23] = 0;
+            data[24] = 0;
+            data[25] = 0;
+            data[26] = 0;
         }
         if (this.backward.size() > 1) {
-            dump += this.backwardIAT.getSum() + ",";
-            dump += this.backwardIAT.getMean() + ",";
-            dump += this.backwardIAT.getStandardDeviation() + ",";
-            dump += this.backwardIAT.getMax() + ",";
-            dump += this.backwardIAT.getMin() + ",";
+            data[27] = this.backwardIAT.getSum() ;
+            data[28] = this.backwardIAT.getMean() ;
+            data[29] = this.backwardIAT.getStandardDeviation() ;
+            data[30] = this.backwardIAT.getMax();
+            data[31] = this.backwardIAT.getMin();
         } else {
-            dump += "0,0,0,0,0,";
+            data[27] = 0;
+            data[28] = 0;
+            data[29] = 0;
+            data[30] = 0;
+            data[31] = 0;
         }
+        data[32] = this.fPSH_cnt;
+        data[33] = this.bPSH_cnt;
+        data[34] = this.fURG_cnt;
+        data[35] = this.bURG_cnt;
 
-        dump += this.fPSH_cnt + ",";
-        dump += this.bPSH_cnt + ",";
-        dump += this.fURG_cnt + ",";
-        dump += this.bURG_cnt + ",";
-
-        dump += this.fHeaderBytes + ",";
-        dump += this.bHeaderBytes + ",";
-        dump += getfPktsPerSecond() + ",";
-        dump += getbPktsPerSecond() + ",";
-
+        data[36] =  this.fHeaderBytes;
+        data[37] =  this.bHeaderBytes;
+        data[38] =  getfPktsPerSecond();
+        data[39] =  getbPktsPerSecond();
         if (this.forward.size() > 0 || this.backward.size() > 0) {
-            dump += this.flowLengthStats.getMin() + ",";
-            dump += this.flowLengthStats.getMax() + ",";
-            dump += this.flowLengthStats.getMean() + ",";
-            dump += this.flowLengthStats.getStandardDeviation() + ",";
-            dump += flowLengthStats.getVariance() + ",";
+            data[40] = this.flowLengthStats.getMin();
+            data[41] = this.flowLengthStats.getMax();
+            data[42] = this.flowLengthStats.getMean();
+            data[43] = this.flowLengthStats.getStandardDeviation();
+            data[44] = flowLengthStats.getVariance();
         } else {
-            dump += "0,0,0,0,";
+            data[40] = 0;
+            data[41] = 0;
+            data[42] = 0;
+            data[43] = 0;
+            data[44] = 0;
         }
 
-        for (String key : flagCounts.keySet()) {
-            dump += flagCounts.get(key).value + ",";
-        }
+        data[45] = flagCounts.get("FIN").value;                 //46
+        data[46] = flagCounts.get("SYN").value;                 //47
+        data[47] = flagCounts.get("RST").value;                 //48
+        data[48] = flagCounts.get("PSH").value;                 //49
+        data[49] = flagCounts.get("ACK").value;                 //50
+        data[50] = flagCounts.get("URG").value;                 //51
+        data[51] = flagCounts.get("CWR").value;                 //52
+        data[52] = flagCounts.get("ECE").value;                 //53
 
-        dump += getDownUpRatio() + ",";
-        dump += getAvgPacketSize() + ",";
-        dump += fAvgSegmentSize() + ",";
-        dump += bAvgSegmentSize() + ",";
-        dump += this.fHeaderBytes + ",";  //this feature is duplicated
+
+        data[53] = getDownUpRatio() ;
+        data[54] = getAvgPacketSize();
+        data[55] = fAvgSegmentSize();
+        data[56] = bAvgSegmentSize();
+        data[57] = this.fHeaderBytes;  //this feature is duplicated
 
 
-        dump += fAvgBytesPerBulk() + ",";
-        dump += fAvgPacketsPerBulk() + ",";
-        dump += fAvgBulkRate() + ",";
-        dump += fAvgBytesPerBulk() + ",";
-        dump += bAvgPacketsPerBulk() + ",";
-        dump += bAvgBulkRate() + ",";
+        data[58] = fAvgBytesPerBulk();
+        data[59] = fAvgPacketsPerBulk();
+        data[60] = fAvgBulkRate();
+        data[61] = fAvgBytesPerBulk() ;
+        data[62] = bAvgPacketsPerBulk();
+        data[63] = bAvgBulkRate();
 
-        dump += getSflow_fpackets() + ",";
-        dump += getSflow_fbytes() + ",";
-        dump += getSflow_bpackets() + ",";
-        dump += getSflow_bbytes() + ",";
+        data[64] = getSflow_fpackets() ;
+        data[65] = getSflow_fbytes();
+        data[66] = getSflow_bpackets();
+        data[67] = getSflow_bbytes();
 
-        dump += this.Init_Win_bytes_forward + ",";
-        dump += this.Init_Win_bytes_backward + ",";
-        dump += this.Act_data_pkt_forward + ",";
-        dump += this.min_seg_size_forward + ",";
+        data[68] = this.Init_Win_bytes_forward ;
+        data[69] = this.Init_Win_bytes_backward ;
+        data[70] = this.Act_data_pkt_forward;
+        data[71] = this.min_seg_size_forward;
 
         if (this.flowActive.getN() > 0) {
-            dump += this.flowActive.getMean() + ",";
-            dump += this.flowActive.getStandardDeviation() + ",";
-            dump += this.flowActive.getMax() + ",";
-            dump += this.flowActive.getMin() + ",";
+            data[72] = this.flowActive.getMean();
+            data[73] = this.flowActive.getStandardDeviation();
+            data[74] = this.flowActive.getMax();
+            data[75] = this.flowActive.getMin();
         } else {
-            dump += "0,0,0,0,";
+            data[72] = 0;
+            data[73] = 0;
+            data[74] = 0;
+            data[75] = 0;
         }
 
         if (this.flowIdle.getN() > 0) {
-            dump += this.flowIdle.getMean() + ",";
-            dump += this.flowIdle.getStandardDeviation() + ",";
-            dump += this.flowIdle.getMax() + ",";
-            dump += this.flowIdle.getMin();
+            data[76] = this.flowIdle.getMean();
+            data[77] = this.flowIdle.getStandardDeviation();
+            data[78] = this.flowIdle.getMax();
+            data[79] = this.flowIdle.getMin();
         } else {
-            dump += "0,0,0,0";
+            data[76] = 0;
+            data[77] = 0;
+            data[78] = 0;
+            data[79] = 0;
         }
-        dump += "," + getLabel();
-
-		/*if(FormatUtils.ip(src).equals("147.32.84.165") | FormatUtils.ip(dst).equals("147.32.84.165")){
-			dump+=",BOTNET";
-		}
-		else{
-			dump+=",BENIGN";
-		} */
-        /////////////////////////////////
-        return dump;
+        return data;
     }
 
     public int packetCount() {
@@ -1051,29 +1065,27 @@ public class BasicFlow {
         return (flowIdle.getN() > 0) ? flowIdle.getMin() : 0;
     }
 
+    public String label;
+
     public String getLabel() {
-        //the original is "|". I think it should be "||" need to check,
-		/*if(FormatUtils.ip(src).equals("147.32.84.165") || FormatUtils.ip(dst).equals("147.32.84.165")){
-			return "BOTNET";
-		}
-		else{
-			return "BENIGN";
-		}*/
-        return "NoLabel";
+        return this.label;
+    }
+    public void setLabel(String label){
+        this.label = label;
     }
 
-    public String dumpFlowBasedFeaturesEx() {
+    public String dumpFlowBasedFeaturesEx(String label) {
         StringBuilder dump = new StringBuilder();
 
-        dump.append(flowId).append(separator);                                        //1
-        dump.append(FormatUtils.ip(src)).append(separator);                        //2
+//        dump.append(flowId).append(separator);                                        //1
+//        dump.append(FormatUtils.ip(src)).append(separator);                        //2
         dump.append(getSrcPort()).append(separator);                                //3
-        dump.append(FormatUtils.ip(dst)).append(separator);                        //4
+//        dump.append(FormatUtils.ip(dst)).append(separator);                        //4
         dump.append(getDstPort()).append(separator);                                //5
         dump.append(getProtocol()).append(separator);                                //6
 
         String starttime = DateFormatter.convertMilliseconds2String(flowStartTime / 1000L, "dd/MM/yyyy hh:mm:ss a");
-        dump.append(starttime).append(separator);                                    //7
+//        dump.append(starttime).append(separator);                                    //7
 
         long flowDuration = flowLastSeen - flowStartTime;
         dump.append(flowDuration).append(separator);                                //8
@@ -1229,8 +1241,7 @@ public class BasicFlow {
             dump.append(0).append(separator);
         }
 
-        dump.append(getLabel());
-
+        dump.append(label);
 
         return dump.toString();
     }

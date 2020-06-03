@@ -15,7 +15,7 @@ import static com.cidp.monitorsystem.ml.util.Utils.countLines;
 public class PcapReader {
 
 
-    public static void readFile(String inputFile, String outPath, long flowTimeout, long activityTimeout) {
+    public static void readFile(String inputFile, String outPath,String label) {
         if(inputFile==null ||outPath==null ) {
             return;
         }
@@ -30,13 +30,13 @@ public class PcapReader {
 
         File saveFileFullPath = new File(outPath+fileName+FLOW_SUFFIX);
 
-        if (saveFileFullPath.exists()) {
-            if (!saveFileFullPath.delete()) {
-                System.out.println("Saved file full path cannot be deleted");
-            }
-        }
+//        if (saveFileFullPath.exists()) {
+//            if (!saveFileFullPath.delete()) {
+//                System.out.println("Saved file full path cannot be deleted");
+//            }
+//        }
 
-        FlowGenerator flowGen = new FlowGenerator(true, flowTimeout, activityTimeout);
+        FlowGenerator flowGen = new FlowGenerator(true, 120000000L, 5000000L);
         flowGen.addFlowListener(new FlowListener(fileName,outPath));
         boolean readIP6 = false;
         boolean readIP4 = true;
@@ -47,13 +47,12 @@ public class PcapReader {
         int nValid=0;
         int nTotal=0;
         int nDiscarded = 0;
-        long start = System.currentTimeMillis();
         while(true) {
             try{
                 BasicPacketInfo basicPacket = packetReader.nextPacket();
                 nTotal++;
                 if(basicPacket !=null){
-                    flowGen.addPacket(basicPacket);
+                    flowGen.addPacket(basicPacket,label);
                     nValid++;
                 }else{
                     nDiscarded++;
@@ -63,13 +62,13 @@ public class PcapReader {
             }
         }
 
-        flowGen.dumpLabeledCurrentFlow(saveFileFullPath.getPath(), FlowFeature.getHeader());
+        flowGen.dumpLabeledCurrentFlow(saveFileFullPath.getPath(),label);
 
-        long lines = countLines(saveFileFullPath.getPath());
+//        long lines = countLines(saveFileFullPath.getPath());
 
-        System.out.println(String.format("%s is done. total %d flows ",fileName,lines));
-        System.out.println(String.format("Packet stats: Total=%d,Valid=%d,Discarded=%d",nTotal,nValid,nDiscarded));
-        System.out.println("-----------------------------------------------------------------------------------------");
+//        System.out.println(String.format("%s is done. total %d flows ",fileName,lines));
+//        System.out.println(String.format("Packet stats: Total=%d,Valid=%d,Discarded=%d",nTotal,nValid,nDiscarded));
+//        System.out.println("-----------------------------------------------------------------------------------------");
 
     }
 
@@ -88,9 +87,9 @@ public class PcapReader {
         }
 
         @Override
-        public void onFlowGenerated(BasicFlow flow) {
+        public void onFlowGenerated(BasicFlow flow,String label) {
 
-            String flowDump = flow.dumpFlowBasedFeaturesEx();
+            String flowDump = flow.dumpFlowBasedFeaturesEx(label);
             List<String> flowStringList = new ArrayList<>();
             flowStringList.add(flowDump);
             InsertCsvRow.insert(FlowFeature.getHeader(),flowStringList,outPath,fileName+ FLOW_SUFFIX);

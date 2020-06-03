@@ -149,14 +149,14 @@ public class Flow {
         }
     }
 
-    public static void main(String[] args) {
-        ArrayList<String> list = new ArrayList<>();
-        list.add(".1.3.6.1.2.1.2.2.1.10.1");
-        list.add(".1.3.6.1.2.1.2.2.1.10.10001");
-        list.add(".1.3.6.1.2.1.2.2.1.10.10005");
-        Flow flow = new Flow("172.17.137.60", list);
-        flow.calc();
-        System.out.println(flow.getFlowValue());
-    }
+//    public static void main(String[] args) {
+//        ArrayList<String> list = new ArrayList<>();
+//        list.add(".1.3.6.1.2.1.2.2.1.10.1");
+//        list.add(".1.3.6.1.2.1.2.2.1.10.10001");
+//        list.add(".1.3.6.1.2.1.2.2.1.10.10005");
+//        Flow flow = new Flow("172.17.137.60", list);
+//        flow.calc();
+//        System.out.println(flow.getFlowValue());
+//    }
 }
 

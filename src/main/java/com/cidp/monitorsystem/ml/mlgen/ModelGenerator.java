@@ -9,14 +9,7 @@ import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSource;
 
-/**
- *
- * @author Taha Emara 
- * Website: http://www.emaraic.com 
- * Email : taha@emaraic.com
- * Created on: Jun 28, 2017
- * Github link: https://github.com/emara-geek/weka-example
- */
+
 public class ModelGenerator {
 
     public Instances loadDataset(String path) {

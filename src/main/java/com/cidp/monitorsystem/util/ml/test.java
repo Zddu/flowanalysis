@@ -1,4 +1,4 @@
-package com.cidp.monitorsystem.util.ML;
+package com.cidp.monitorsystem.util.ml;
 
 import weka.classifiers.lazy.IBk;
 import weka.classifiers.trees.J48;

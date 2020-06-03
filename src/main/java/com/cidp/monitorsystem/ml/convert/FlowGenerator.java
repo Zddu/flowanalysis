@@ -1,5 +1,6 @@
 package com.cidp.monitorsystem.ml.convert;
 
+import com.cidp.monitorsystem.ml.util.getCurrentPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import weka.core.Instances;
@@ -12,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import static com.cidp.monitorsystem.ml.util.Utils.LINE_SEP;
@@ -68,7 +70,7 @@ public class FlowGenerator {
         mListener = listener;
     }
 
-    public void addPacket(BasicPacketInfo packet){
+    public void addPacket(BasicPacketInfo packet,String label){
         if(packet == null) {
             return;
         }
@@ -92,7 +94,7 @@ public class FlowGenerator {
             if((currentTimestamp -flow.getFlowStartTime())>flowTimeOut){
                 if(flow.packetCount()>1){
                     if (mListener != null) {
-                        mListener.onFlowGenerated(flow);
+                        mListener.onFlowGenerated(flow,label);
                     }
                     else{
                         finishedFlows.put(getFlowCount(), flow);
@@ -115,7 +117,7 @@ public class FlowGenerator {
                 logger.debug("FlagFIN current has {} flow",currentFlows.size());
                 flow.addPacket(packet);
                 if (mListener != null) {
-                    mListener.onFlowGenerated(flow);
+                    mListener.onFlowGenerated(flow,label);
                 }
                 else {
                     finishedFlows.put(getFlowCount(), flow);
@@ -159,7 +161,7 @@ public class FlowGenerator {
 
     }*/
 
-    public int dumpLabeledFlowBasedFeatures(String path, String filename,String header){
+    public int dumpLabeledFlowBasedFeatures(String path, String filename,String header,String label){
         BasicFlow   flow;
         int         total = 0;
         int   zeroPkt = 0;
@@ -174,7 +176,7 @@ public class FlowGenerator {
             for(Integer key:fkeys){
                 flow = finishedFlows.get(key);
                 if (flow.packetCount() > 1) {
-                    output.write((flow.dumpFlowBasedFeaturesEx() + "\n").getBytes());
+                    output.write((flow.dumpFlowBasedFeaturesEx(label) + "\n").getBytes());
                     total++;
                 }
                 else {
@@ -188,7 +190,7 @@ public class FlowGenerator {
             for(String key:ckeys){
                 flow = currentFlows.get(key);
                 if(flow.packetCount()>1) {
-                    output.write((flow.dumpFlowBasedFeaturesEx() + "\n").getBytes());
+                    output.write((flow.dumpFlowBasedFeaturesEx(label) + "\n").getBytes());
                     total++;
                 }else{
                     zeroPkt++;
@@ -206,49 +208,42 @@ public class FlowGenerator {
         return total;
     }
 
-    public long dumpLabeledCurrentFlow(String fileFullPath,String header) {
-        if (fileFullPath == null || header==null) {
+    public List<double[]> dumpLabeledFlowInstances(int nums){
+        List<double[]> datas = new ArrayList<>();
+        for (BasicFlow flow : currentFlows.values()) {
+            datas.add(flow.dumpFlowBasedFeatures(nums));
+//            for (double v : flow.dumpFlowBasedFeatures(nums)) {
+//                System.out.print(v);
+//            }
+//            System.out.println();
+        }
+        return datas;
+    }
+    public long dumpLabeledCurrentFlow(String fileFullPath,String label) {
+        if (fileFullPath == null ) {
             String ex = String.format("fullFilePath=%s,filename=%s", fileFullPath);
             throw new IllegalArgumentException(ex);
         }
 
         File file = new File(fileFullPath);
         FileOutputStream output = null;
-        String f2 = "C:\\Users\\Administrator\\Desktop\\123.arff";
         int total = 0;
         try {
             if (file.exists()) {
                 output = new FileOutputStream(file, true);
             }else{
                 output = new FileOutputStream(file);
-                output.write((header + LINE_SEP).getBytes());
+//                output.write((header + LINE_SEP).getBytes());
 //                if (file.createNewFile()) {
 //
 //                }
             }
-
             for (BasicFlow flow : currentFlows.values()) {
                 if(flow.packetCount()>1) {
-                    output.write((flow.dumpFlowBasedFeaturesEx() + LINE_SEP).getBytes());
+                    output.write((flow.dumpFlowBasedFeaturesEx(label) + LINE_SEP).getBytes());
                     total++;
-                }else{
-
                 }
             }
-            CSVLoader loader = new CSVLoader();
-
-            loader.setSource(new FileInputStream(file));
-            String [] options = new String[1];
-            options[0]="-H";
-            loader.setOptions(options);
-            Instances data = loader.getDataSet();
-            System.out.println(data);
-
-            // save as an  ARFF (output file)
-            ArffSaver saver = new ArffSaver();
-            saver.setInstances(data);
-            saver.setFile(new File(f2));
-            saver.writeBatch();
         } catch (IOException e) {
             logger.debug(e.getMessage());
         } catch (Exception e) {

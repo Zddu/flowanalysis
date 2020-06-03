@@ -99,6 +99,7 @@ public class PacketReader {
                 }
 
             }else{
+                pcapReader.close();
                 throw new PcapClosedException();
             }
         }catch(PcapClosedException e){

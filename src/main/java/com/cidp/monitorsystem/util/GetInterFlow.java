@@ -33,8 +33,4 @@ public class GetInterFlow {
         }
         return list;
     }
-
-    public static void main(String[] args) throws Exception {
-        GetInterFlow.getFlow("172.17.137.60",3000);
-    }
 }

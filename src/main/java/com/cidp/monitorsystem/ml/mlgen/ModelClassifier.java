@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import weka.classifiers.Classifier;
+import weka.classifiers.Evaluation;
 import weka.classifiers.functions.MultilayerPerceptron;
+import weka.classifiers.trees.J48;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instances;
@@ -13,56 +15,29 @@ import weka.core.SerializationHelper;
 
 public class ModelClassifier {
 
-    private Attribute petallength;
-    private Attribute petalwidth;
-
-    private ArrayList<Attribute> attributes;
-    private ArrayList<String> classVal;
-    private Instances dataRaw;
-
-
-    public ModelClassifier() {
-        petallength = new Attribute("petallength");
-        petalwidth = new Attribute("petalwidth");
-        attributes = new ArrayList<Attribute>();
-        classVal = new ArrayList<String>();
-        classVal.add("Iris-setosa");
-        classVal.add("Iris-versicolor");
-        classVal.add("Iris-virginica");
-
-        attributes.add(petallength);
-        attributes.add(petalwidth);
-
-        attributes.add(new Attribute("class", classVal));
-        dataRaw = new Instances("TestInstances", attributes, 0);
-        dataRaw.setClassIndex(dataRaw.numAttributes() - 1);
-    }
-
-    
-    public Instances createInstance(double petallength, double petalwidth, double result) {
-        dataRaw.clear();
-        double[] instanceValue1 = new double[]{petallength, petalwidth, 0};
-        dataRaw.add(new DenseInstance(1.0, instanceValue1));
-        return dataRaw;
-    }
-
-
-    public String classifiy(Instances insts, String path) {
-        String result = "Not classified!!";
+    public void classifiy(Instances test, String path) {
         Classifier cls = null;
+        double score=0;
         try {
-            cls = (MultilayerPerceptron) SerializationHelper.read(path);
-            result = classVal.get((int) cls.classifyInstance(insts.firstInstance()));
+            cls = (J48) SerializationHelper.read(path);
+//            result = classVal.get((int) cls.classifyInstance(insts.firstInstance()));
+            for (int i = 0; i < test.numInstances(); i++){// 测试分类结果
+                int preIndex = i + 1;
+//                System.out.println("第"+ preIndex +"个样本的判断结果是：" + test.classAttribute().value((int) cls.classifyInstance(test.instance(i))));
+//                System.out.println("第"+ preIndex +"个样本的类别属性是：" + test.instance(i).toString(test.classIndex()));
+                boolean flag = false;
+                if (cls.classifyInstance(test.instance(i)) == test.instance(i).classValue()){// 如果预测值和答案值相等（测试语料中的分类列提供的须为正确答案，结果才有意义）
+                    score++;// 正确值加1
+                    flag = true;
+                }
+                System.out.println("第"+ preIndex +"个样本的判断结果是否正确：" + flag);
+            }
+            System.out.println("Model classification precision:" + (score / test.numInstances()));
         } catch (Exception ex) {
             Logger.getLogger(ModelClassifier.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return result;
     }
 
 
-    public Instances getInstance() {
-        return dataRaw;
-    }
-    
 
 }

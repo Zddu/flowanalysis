@@ -111,7 +111,6 @@ public enum FlowFeature {
         this.name = name;
         this.abbr = abbr;
         isNumeric = true;
-
     }
 
     FlowFeature(String name,String abbr,String[] values) {
@@ -155,7 +154,19 @@ public enum FlowFeature {
         }
         return HEADER;
     }
+    public static String getHeaderAddr() {
 
+        if(HEADER ==null|| HEADER.length()==0) {
+            StringBuilder header = new StringBuilder();
+
+            for(FlowFeature feature: FlowFeature.values()) {
+                header.append(feature.getAbbr()).append(",");
+            }
+            header.deleteCharAt(header.length()-1);
+            HEADER = header.toString();
+        }
+        return HEADER;
+    }
     public static List<FlowFeature> getFeatureList() {
         List<FlowFeature> features = new ArrayList<>();
         features.add(prot);
