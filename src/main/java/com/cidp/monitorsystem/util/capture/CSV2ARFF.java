@@ -13,8 +13,8 @@ public class CSV2ARFF {
 
     public static void main(String[] args) {
         try {
-            String f1 = "C:\\Users\\Administrator\\Desktop\\1.pcap_Flow.csv";
-            String f2 = "C:\\Users\\Administrator\\Desktop\\output.arff";
+            String f1 = "C:\\Users\\Administrator\\Desktop\\1\\EP2FLOW.csv";
+            String f2 = "C:\\Users\\Administrator\\Desktop\\EP2FLOW.arff";
 
             // load the CSV file (input file)
             CSVLoader loader = new CSVLoader();

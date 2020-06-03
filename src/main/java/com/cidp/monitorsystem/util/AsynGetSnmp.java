@@ -162,19 +162,19 @@ public class AsynGetSnmp {
      *
      * @param args
      */
-    public static void main(String[] args) {
-
-
-        String ip = "172.17.137.115";
-        String community = "public";
-
-
-        List<String> oidList = new ArrayList<String>();
-        oidList.add(".1.3.6.1.2.1.1.1.0");
-        oidList.add(".1.3.6.1.2.1.1.3.0");
-        oidList.add(".1.3.6.1.2.1.1.5.0");
-// 异步采集数据
-        AsynGetSnmp.snmpAsynWalk(ip, community, ".1.3.6.1.2.1.4.21.1.1");
-    }
+//    public static void main(String[] args) {
+//
+//
+//        String ip = "172.17.137.115";
+//        String community = "public";
+//
+//
+//        List<String> oidList = new ArrayList<String>();
+//        oidList.add(".1.3.6.1.2.1.1.1.0");
+//        oidList.add(".1.3.6.1.2.1.1.3.0");
+//        oidList.add(".1.3.6.1.2.1.1.5.0");
+//// 异步采集数据
+//        AsynGetSnmp.snmpAsynWalk(ip, community, ".1.3.6.1.2.1.4.21.1.1");
+//    }
 
 }

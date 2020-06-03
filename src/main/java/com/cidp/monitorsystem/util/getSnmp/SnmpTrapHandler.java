@@ -79,9 +79,9 @@ public class SnmpTrapHandler implements CommandResponder {
         System.out.println("接收到的trap信息：[发送来源=" + event.getPeerAddress() + ",snmp版本=" + version + ",团体名=" + community + ", 携带的变量=" + event.getPDU().getVariableBindings() + "]");
     }
 
-    public static void main(String[] args) {
-        SnmpTrapHandler handler = new SnmpTrapHandler("172.17.136.33","162");
-        handler.start();
-    }
+//    public static void main(String[] args) {
+//        SnmpTrapHandler handler = new SnmpTrapHandler("172.17.136.33","162");
+//        handler.start();
+//    }
 
 }
