@@ -192,10 +192,6 @@ public class DiagnosisService {
     }
 
 
-
-
-
-
     public String getRemark(String id) {
         return diagnosisMapper.getRemark(id);
     }
