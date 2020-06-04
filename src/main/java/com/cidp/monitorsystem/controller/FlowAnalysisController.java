@@ -1,7 +1,8 @@
 package com.cidp.monitorsystem.controller;
 
+import com.cidp.monitorsystem.model.Algorithm;
+import com.cidp.monitorsystem.model.EvaReasult;
 import com.cidp.monitorsystem.model.RespBean;
-import com.cidp.monitorsystem.model.UnLabeled;
 import com.cidp.monitorsystem.service.dispservice.FlowAnalysisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/flow")
@@ -88,5 +90,38 @@ public class FlowAnalysisController {
     @GetMapping("/downarffunlabel")
     public void downUnlabel(HttpServletResponse res) throws IOException {
         flowAnalysisService.downUnlabel(res);
+    }
+
+    @GetMapping("/getalgs")
+    public List<Algorithm> getAlgors(){
+        return flowAnalysisService.getAllAlgs();
+    }
+    @GetMapping("/getchoicealgs")
+    public void getChoice(@RequestParam String choice){
+        flowAnalysisService.getChoice(choice);
+    }
+
+    @PostMapping("/updataset")
+    public RespBean upDataSet(MultipartFile file){
+        if (flowAnalysisService.upDataSet(file)==1){
+            return RespBean.ok("上传成功");
+        }else {
+            return RespBean.error("上传失败！");
+        }
+    }
+    @GetMapping("/start")
+    public RespBean startTrain(){
+        if (flowAnalysisService.start()==1){
+            return RespBean.ok("训练成功!");
+        }else if(flowAnalysisService.start()==0){
+            return RespBean.error("训练失败，没有选择分类器!");
+        }else {
+            return RespBean.error("训练失败!");
+        }
+    }
+
+    @GetMapping("/evaluation")
+    public EvaReasult getResult(){
+        return flowAnalysisService.getResult();
     }
 }

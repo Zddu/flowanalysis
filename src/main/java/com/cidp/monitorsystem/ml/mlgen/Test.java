@@ -2,6 +2,7 @@ package com.cidp.monitorsystem.ml.mlgen;
 
 import com.cidp.monitorsystem.ml.convert.PcapReader;
 import weka.classifiers.functions.MultilayerPerceptron;
+import weka.classifiers.lazy.IBk;
 import weka.classifiers.trees.J48;
 import weka.core.Debug;
 import weka.core.Instances;
@@ -51,14 +52,14 @@ public class Test {
 
         // build classifier with train dataset
 //        MultilayerPerceptron ann = (MultilayerPerceptron) mg.buildClassifier(traindataset);
-        J48 ann = new J48();
+        IBk ann = new IBk();
         ann.buildClassifier(traindataset);
         // Evaluate classifier with test dataset
         String evalsummary = mg.evaluateModel(ann, traindataset, testdataset);
         System.out.println("Evaluation: " + evalsummary);
 
         //Save model
-        mg.saveModel(ann, MODElPATH);
+//        mg.saveModel(ann, MODElPATH);
 
         //classifiy a single instance
 //        ModelClassifier cls = new ModelClassifier();
