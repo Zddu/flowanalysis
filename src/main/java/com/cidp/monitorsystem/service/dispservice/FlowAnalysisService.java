@@ -5,6 +5,7 @@ import com.cidp.monitorsystem.ml.convert.PcapReader;
 import com.cidp.monitorsystem.ml.mlgen.ModelGenerator;
 import com.cidp.monitorsystem.ml.mlgen.Sampling;
 import com.cidp.monitorsystem.ml.util.GenInstances;
+import com.cidp.monitorsystem.ml.util.Utils;
 import com.cidp.monitorsystem.ml.util.getCurrentPath;
 import com.cidp.monitorsystem.model.Algorithm;
 import com.cidp.monitorsystem.model.EvaReasult;
@@ -25,6 +26,7 @@ import weka.classifiers.lazy.LWL;
 import weka.classifiers.trees.J48;
 import weka.core.Debug;
 import weka.core.Instances;
+import weka.core.SerializationHelper;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.CSVLoader;
 import weka.filters.Filter;
@@ -43,6 +45,7 @@ public class FlowAnalysisService {
     private static final String prefix_file_pcap = "inpcap_";
     private static final String prefix_file_arff = "1.out_";
     private static final String CSV_FLOW = "_Flow.csv";
+    private static final String Model_File = ".model";
     private static Instances data = null;
     private static Instances unlabeled = null;
     private static String algor = "";
@@ -326,66 +329,72 @@ public class FlowAnalysisService {
             }
             Instances instances = data;
             Classifier classifier = null;
-            EvaReasult er = new EvaReasult();
             Filter filter = new Normalize();
             int trainSize = (int) Math.round(instances.numInstances() * 0.8);
             int testSize = instances.numInstances() - trainSize;
             instances.randomize(new Debug.Random(1));
+            Instances traindataset;
+            Instances testdataset;
             //Normalize dataset
             filter.setInputFormat(instances);
-            Instances datasetnor = Sampling.SMOTESample(instances);
-            Instances traindataset = new Instances(datasetnor, 0, trainSize);
-            Instances testdataset = new Instances(datasetnor, trainSize, testSize);
+            if (algor.equals("1")||algor.equals("3")){
+                Instances datasetnor = Sampling.SMOTESample(instances);
+                traindataset = new Instances(datasetnor, 0, trainSize);
+                testdataset = new Instances(datasetnor, trainSize, testSize);
+            }else {
+                traindataset = new Instances(instances, 0, trainSize);
+                testdataset = new Instances(instances, trainSize, testSize);
+            }
             switch (algor) {
-                case "IBk":
+                case "1":
                     classifier = new IBk();
                     break;
-                case "Naive Bayes classifier":
+                case "2":
                     classifier = new NaiveBayes();
                     break;
-                case "J48":
+                case "3":
                     classifier = new J48();
                     break;
-                case "NaiveBayesMultionmial":
+                case "4":
                     classifier = new NaiveBayesMultinomial();
                     break;
-                case "NaiveBayesMultionmialText":
+                case "5":
                     classifier = new NaiveBayesMultinomialText();
                     break;
-                case "NaiveBayesMultinomialUpdateable":
+                case "6":
                     classifier = new NaiveBayesMultinomialUpdateable();
                     break;
-                case "GaussianProcesses":
+                case "7":
                     classifier = new GaussianProcesses();
                     break;
-                case "LinearRegression":
+                case "8":
                     classifier = new LinearRegression();
                     break;
-                case "Logistic":
+                case "9":
                     classifier = new Logistic();
                     break;
-                case "MultilayerPerceptron":
+                case "10":
                     classifier = new MultilayerPerceptron();
                     break;
-                case "SGD":
+                case "11":
                     classifier = new SGD();
                     break;
-                case "SGDText":
+                case "12":
                     classifier = new SGDText();
                     break;
-                case "SimpleLogistic":
+                case "13":
                     classifier = new SimpleLogistic();
                     break;
-                case "SMO":
+                case "14":
                     classifier = new SMO();
                     break;
-                case "VotedPerceptron":
+                case "15":
                     classifier = new VotedPerceptron();
                     break;
-                case "KStar":
+                case "16":
                     classifier = new KStar();
                     break;
-                case "LWL":
+                case "17":
                     classifier = new LWL();
                     break;
             }
@@ -393,22 +402,12 @@ public class FlowAnalysisService {
                 classifier.buildClassifier(traindataset);
                 Evaluation eva = new Evaluation(traindataset);
                 eva.evaluateModel(classifier, testdataset);
-                er.setCorrect(eva.correct());
-                er.setIncorrect(eva.incorrect());
-                er.setKappa(eva.kappa());
-                er.setMeanAbsoluteError(eva.meanAbsoluteError());
-                er.setRootMeanSquaredError(eva.rootMeanSquaredError());
-                er.setRootRelativeSquaredError(eva.rootRelativeSquaredError());
-                er.setTotalNumberOfInstances(eva.numInstances());
-                er.setAvgCost(eva.avgCost());
-                er.setPctCorrect(eva.pctCorrect());
-                er.setPctUnclassified(eva.pctUnclassified());
-                er.setRelativeAbsoluteError(eva.relativeAbsoluteError());
-                er.setRootMeanPriorSquaredError(eva.rootMeanPriorSquaredError());
-                er.setErrorRate(eva.errorRate());
-                er.setWeightedRecall(eva.weightedRecall());
-                er.setCorrect(1-eva.errorRate());
-                reasult = er;
+                reasult = Utils.getResult(eva);
+                File folder = new File(getCurrentPath.getPath());
+                String ppath = folder.getParentFile().getParent() + "/model/";
+                File file = new File(ppath+algor+Model_File);
+                if (file.exists()) file.delete();
+                SerializationHelper.write(ppath+algor+Model_File, classifier);
             } catch (Exception e) {
                 e.printStackTrace();
                 return -1;

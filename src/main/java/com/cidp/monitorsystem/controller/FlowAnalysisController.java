@@ -109,6 +109,7 @@ public class FlowAnalysisController {
             return RespBean.error("上传失败！");
         }
     }
+
     @GetMapping("/start")
     public RespBean startTrain(){
         if (flowAnalysisService.start()==1){

@@ -1,8 +1,10 @@
 package com.cidp.monitorsystem.ml.util;
 
+import com.cidp.monitorsystem.model.EvaReasult;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import weka.classifiers.Evaluation;
 
 import java.io.*;
 
@@ -18,7 +20,25 @@ public class Utils {
 
         return PCAP.equalsIgnoreCase(contentType);
     }
-
+    public static EvaReasult getResult(Evaluation eva) throws Exception {
+        EvaReasult er = new EvaReasult();
+        er.setCorrect(eva.correct());
+        er.setIncorrect(eva.incorrect());
+        er.setKappa(eva.kappa());
+        er.setMeanAbsoluteError(eva.meanAbsoluteError());
+        er.setRootMeanSquaredError(eva.rootMeanSquaredError());
+        er.setRootRelativeSquaredError(eva.rootRelativeSquaredError());
+        er.setTotalNumberOfInstances(eva.numInstances());
+        er.setAvgCost(eva.avgCost());
+        er.setPctCorrect(eva.pctCorrect());
+        er.setPctUnclassified(eva.pctUnclassified());
+        er.setRelativeAbsoluteError(eva.relativeAbsoluteError());
+        er.setRootMeanPriorSquaredError(eva.rootMeanPriorSquaredError());
+        er.setErrorRate(eva.errorRate());
+        er.setWeightedRecall(eva.weightedRecall());
+        er.setCorrect(1-eva.errorRate());
+        return er;
+    }
     public static boolean isPcapFile(File file) {
 
         if (file == null) {

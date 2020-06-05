@@ -6,8 +6,9 @@ import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
-import weka.core.converters.ArffSaver;
+import weka.core.converters.ArffLoader;
 import weka.core.converters.CSVLoader;
+import weka.core.converters.DatabaseSaver;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GenInstances {
-    public static final String DATASETPATH = "C:\\Users\\Administrator\\Desktop\\1\\1.pcap";
+    public static final String DATASETPATH = "C:\\Users\\Administrator\\Desktop\\1\\genarff.arff";
+
     public static Instances GenAttr(List<String> labels,String path,String label) throws IOException {
         FlowGenerator flowGen = new FlowGenerator(true, 120000000L, 5000000L);
         boolean readIP6 = false;
@@ -128,16 +130,30 @@ public class GenInstances {
     }
 
     public static void CsvToArff(File file) throws Exception {
-        CSVLoader loader = new CSVLoader();
-        loader.setSource(new FileInputStream(file));
-        String [] options = new String[1];
-        options[0]="-H";
-        loader.setOptions(options);
-        Instances data = loader.getDataSet();
+//        CSVLoader loader = new CSVLoader();
+//        loader.setSource(new FileInputStream(file));
+//        String [] options = new String[1];
+//        options[0]="-H";
+//        loader.setOptions(options);
+        ArffLoader loader1 = new ArffLoader();
+        loader1.setFile(file);
+//        Instances dataSet = loader1.getDataSet();
+        Instances instances = loader1.getDataSet();
         // save as an  ARFF (output file)
-        ArffSaver saver = new ArffSaver();
-        saver.setInstances(data);
-        saver.setFile(new File(getCurrentPath.getPath()+"csvToarff/1_out.arff"));
-        saver.writeBatch();
+//        ArffSaver saver = new ArffSaver();
+//        saver.setInstances(data);
+//        Instances instances = saver.getInstances();
+        DatabaseSaver databaseSaver = new DatabaseSaver();
+        databaseSaver.setDestination("jdbc:mysql://localhost:3306/monitorsys?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai","root","root");
+        databaseSaver.setTableName("instances");
+        databaseSaver.setRelationForTableName(false);
+        databaseSaver.setRetrieval(DatabaseSaver.INCREMENTAL);
+        databaseSaver.setStructure(instances);
+        for (int i = 0; i < instances.numInstances(); i++) {
+            databaseSaver.writeIncremental(instances.instance(i));
+        }
+        databaseSaver.writeIncremental(null);
+//        saver.setFile(new File(getCurrentPath.getPath()+"csvToarff/1_out.arff"));
+//        saver.writeBatch();
     }
 }
