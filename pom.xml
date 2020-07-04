@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.cidp</groupId>
-    <artifactId>monitorsystem</artifactId>
+    <artifactId>flowanalysis</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>monitorsystem</name>
+    <name>flowanalysis</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cidp.flowanalysis.mapper.InstancesMapper">
+
+    <delete id="deleteAll">
+        delete from instances
+    </delete>
+    <select id="getResult" resultType="com.cidp.flowanalysis.model.Pie">
+        SELECT label as name,COUNT(label) as value FROM instances GROUP BY label
+    </select>
+    <select id="getAllData" resultType="java.util.Map">
+        select * from  instances
+    </select>
+
+</mapper>
