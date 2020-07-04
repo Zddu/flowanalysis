@@ -3,9 +3,8 @@ package com.cidp.flowanalysis.service.dispservice;
 import com.cidp.flowanalysis.mapper.AlgorithmMapper;
 import com.cidp.flowanalysis.mapper.InstancesMapper;
 import com.cidp.flowanalysis.mapper.ModelMapper;
-import com.cidp.flowanalysis.ml.convert.FlowGenerator;
-import com.cidp.flowanalysis.ml.convert.PacketReader;
 import com.cidp.flowanalysis.ml.convert.PcapReader;
+import com.cidp.flowanalysis.ml.convert.RealCapture;
 import com.cidp.flowanalysis.ml.mlgen.ModelGenerator;
 import com.cidp.flowanalysis.ml.mlgen.Sampling;
 import com.cidp.flowanalysis.ml.util.GenInstances;
@@ -18,9 +17,6 @@ import com.cidp.flowanalysis.model.Prediction;
 import org.apache.commons.io.IOUtils;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
-import org.jnetpcap.nio.JMemory;
-import org.jnetpcap.packet.PcapPacket;
-import org.jnetpcap.packet.PcapPacketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,6 +57,7 @@ public class FlowAnalysisService {
     private static Map<String, Integer> map;
     private static List<Prediction> predictions;
     private String ifName;
+    private Pcap pcap;
 
     @Autowired
     AlgorithmMapper algorithmMapper;
@@ -70,6 +67,8 @@ public class FlowAnalysisService {
     GenInstances genInstances;
     @Autowired
     InstancesMapper instancesMapper;
+    @Autowired
+    RealCapture realCapture;
 
     public int pcapToarff(MultipartFile file) throws FileNotFoundException {
 
@@ -501,35 +500,11 @@ public class FlowAnalysisService {
         this.ifName = ifname;
     }
 
-    public int startCap(String device) {
-        FlowGenerator flowGen = new FlowGenerator(true, 120000000L, 5000000L);
-        int snaplen = 64 * 1024;//2048; // Truncate packet at this size
-        int promiscous = Pcap.MODE_PROMISCUOUS;
-        int timeout = 60 * 1000; // In milliseconds
-        StringBuilder errbuf = new StringBuilder();
-        Pcap pcap = Pcap.openLive(device, snaplen, promiscous, timeout, errbuf);
-        if (pcap == null) {
-            return -2;
-        }
-        PcapPacketHandler<String> jpacketHandler = (packet, user) -> {
-            /*
-             * BufferUnderflowException while decoding header
-             * that is because:
-             * 1.PCAP library is not multi-threaded
-             * 2.jNetPcap library is not multi-threaded
-             * 3.Care must be taken how packets or the data they referenced is used in multi-threaded environment
-             *
-             * typical rule:
-             * make new packet objects and perform deep copies of the data in PCAP buffers they point to
-             *
-             * but it seems not work
-             */
+    public int startCap() {
+        return realCapture.doInBackground(this.ifName,1);
+    }
 
-            PcapPacket permanent = new PcapPacket(JMemory.Type.POINTER);
-            packet.transferStateAndDataTo(permanent);
-            System.out.println("TrafficFlowWorker:60L" + permanent);
-            flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, true, false), "label");
-        };
-        return 1;
+    public void stopCap(){
+        realCapture.doInBackground("",0);
     }
 }

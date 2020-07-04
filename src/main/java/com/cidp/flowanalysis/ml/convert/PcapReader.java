@@ -28,13 +28,6 @@ public class PcapReader {
         }
 
         File saveFileFullPath = new File(outPath+fileName+FLOW_SUFFIX);
-
-//        if (saveFileFullPath.exists()) {
-//            if (!saveFileFullPath.delete()) {
-//                System.out.println("Saved file full path cannot be deleted");
-//            }
-//        }
-
         FlowGenerator flowGen = new FlowGenerator(true, 120000000L, 5000000L);
         flowGen.addFlowListener(new FlowListener(fileName,outPath));
         boolean readIP6 = false;
@@ -42,19 +35,11 @@ public class PcapReader {
         PacketReader packetReader = new PacketReader(inputFile, readIP4, readIP6);
 
         System.out.println(String.format("Working on... %s",fileName));
-
-        int nValid=0;
-        int nTotal=0;
-        int nDiscarded = 0;
         while(true) {
             try{
                 BasicPacketInfo basicPacket = packetReader.nextPacket();
-                nTotal++;
                 if(basicPacket !=null){
                     flowGen.addPacket(basicPacket,label);
-                    nValid++;
-                }else{
-                    nDiscarded++;
                 }
             }catch(PcapClosedException e){
                 break;
@@ -62,12 +47,6 @@ public class PcapReader {
         }
 
         flowGen.dumpLabeledCurrentFlow(saveFileFullPath.getPath(),label);
-
-//        long lines = countLines(saveFileFullPath.getPath());
-
-//        System.out.println(String.format("%s is done. total %d flows ",fileName,lines));
-//        System.out.println(String.format("Packet stats: Total=%d,Valid=%d,Discarded=%d",nTotal,nValid,nDiscarded));
-//        System.out.println("-----------------------------------------------------------------------------------------");
 
     }
 

@@ -207,10 +207,6 @@ public class FlowGenerator {
         List<double[]> datas = new ArrayList<>();
         for (BasicFlow flow : currentFlows.values()) {
             datas.add(flow.dumpFlowBasedFeatures(nums));
-//            for (double v : flow.dumpFlowBasedFeatures(nums)) {
-//                System.out.print(v);
-//            }
-//            System.out.println();
         }
         return datas;
     }

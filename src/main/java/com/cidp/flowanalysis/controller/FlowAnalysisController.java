@@ -188,4 +188,20 @@ public class FlowAnalysisController {
     public void choiceifName(@RequestParam String ifname){
         flowAnalysisService.choiceIfName(ifname);
     }
+
+    @GetMapping("/startcap")
+    public RespBean startCap(){
+        System.out.println(1);
+        if (flowAnalysisService.startCap()==1){
+            return RespBean.ok("开始捕获");
+        }else{
+            return RespBean.error("捕获失败");
+        }
+    }
+
+    @GetMapping("/stopcap")
+    public RespBean stopCap(){
+        flowAnalysisService.stopCap();
+        return RespBean.ok("停止成功");
+    }
 }
