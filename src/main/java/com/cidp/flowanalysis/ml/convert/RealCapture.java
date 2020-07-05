@@ -31,7 +31,6 @@ public class RealCapture implements FlowGenListener {
         PcapPacketHandler<String> jpacketHandler = (packet, user) -> {
             PcapPacket permanent = new PcapPacket(JMemory.Type.POINTER);
             packet.transferStateAndDataTo(permanent);
-            System.out.println("TrafficFlowWorker:60L"+permanent);
             flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, true, false),"label");
         };
 
