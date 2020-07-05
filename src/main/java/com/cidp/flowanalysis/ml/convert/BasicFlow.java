@@ -618,12 +618,64 @@ public class BasicFlow {
             feature.setAttr14(0);
             feature.setAttr15(0);
         }
-        feature.setAttr16(((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L));
-        feature.setAttr17(((double) packetCount()) / ((double) flowDuration / 1000000L));
-        feature.setAttr18(this.flowIAT.getMean());
-        feature.setAttr19(this.flowIAT.getStandardDeviation());
-        feature.setAttr20(this.flowIAT.getMax());
-        feature.setAttr21(this.flowIAT.getMin());
+        if (Double.isNaN(((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L))){
+            feature.setAttr16(0);
+        }else if (Double.compare( ((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L),Double.POSITIVE_INFINITY )==0){
+            feature.setAttr16(0);
+        }else if (Double.compare( ((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L), Double.NEGATIVE_INFINITY)==0){
+            feature.setAttr16(0);
+        }else {
+            feature.setAttr16(((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L));
+        }
+
+        if (Double.isNaN(((double) packetCount()) / ((double) flowDuration / 1000000L))){
+            feature.setAttr17(0);
+        }else if (Double.compare( ((double) packetCount()) / ((double) flowDuration / 1000000L),Double.POSITIVE_INFINITY )==0){
+            feature.setAttr17(0);
+        }else if (Double.compare( ((double) packetCount()) / ((double) flowDuration / 1000000L), Double.NEGATIVE_INFINITY)==0){
+            feature.setAttr17(0);
+        }else {
+            feature.setAttr17(((double) packetCount()) / ((double) flowDuration / 1000000L));
+        }
+        if (Double.isNaN(this.flowIAT.getMean())){
+            feature.setAttr18(0);
+        }else if (Double.compare( this.flowIAT.getMean(),Double.POSITIVE_INFINITY )==0){
+            feature.setAttr18(0);
+        }else if (Double.compare( this.flowIAT.getMean(), Double.NEGATIVE_INFINITY)==0){
+            feature.setAttr18(0);
+        }else {
+            feature.setAttr18(this.flowIAT.getMean());
+        }
+        if (Double.isNaN(this.flowIAT.getStandardDeviation())){
+            feature.setAttr19(0);
+        }else if (Double.compare( this.flowIAT.getStandardDeviation(),Double.POSITIVE_INFINITY )==0){
+            feature.setAttr19(0);
+        }else if (Double.compare( this.flowIAT.getStandardDeviation(), Double.NEGATIVE_INFINITY)==0){
+            feature.setAttr19(0);
+        }else {
+            feature.setAttr19(this.flowIAT.getStandardDeviation());
+        }
+
+        if (Double.isNaN(this.flowIAT.getMax())){
+            feature.setAttr20(0);
+        }else if (Double.compare( this.flowIAT.getMax(),Double.POSITIVE_INFINITY )==0){
+            feature.setAttr20(0);
+        }else if (Double.compare( this.flowIAT.getMax(), Double.NEGATIVE_INFINITY)==0){
+            feature.setAttr20(0);
+        }else {
+            feature.setAttr20(this.flowIAT.getMax());
+        }
+
+        if (Double.isNaN(this.flowIAT.getMin())){
+            feature.setAttr21(0);
+        }else if (Double.compare( this.flowIAT.getMin(),Double.POSITIVE_INFINITY )==0){
+            feature.setAttr21(0);
+        }else if (Double.compare( this.flowIAT.getMin(), Double.NEGATIVE_INFINITY)==0){
+            feature.setAttr21(0);
+        }else {
+            feature.setAttr21(this.flowIAT.getMin());
+        }
+
         if (this.forward.size() > 1) {
             feature.setAttr22(this.forwardIAT.getSum());
             feature.setAttr23(this.forwardIAT.getMean());
