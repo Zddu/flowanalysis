@@ -502,11 +502,12 @@ public class FlowAnalysisService {
 
     public int startCap() {
         String name = this.ifName.substring(0,this.ifName.indexOf("("));
-        System.out.println(name);
-        return realCapture.doInBackground(name,1);
+        realCapture.open(name);
+        realCapture.start();
+        return 1;
     }
 
     public void stopCap(){
-        realCapture.doInBackground("",0);
+        realCapture.stop();
     }
 }
