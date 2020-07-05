@@ -15,5 +15,5 @@ public interface InstancesMapper {
 
     List<Map<String,String>> getAllData();
 
-    void insertInstances(@Param("features") List<Feature> features);
+    void insertInstances(@Param("list") List<Feature> list);
 }
