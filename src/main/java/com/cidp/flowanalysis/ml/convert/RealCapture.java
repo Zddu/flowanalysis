@@ -24,7 +24,6 @@ public class RealCapture implements FlowGenListener {
         this.pcap = Pcap.openLive(device,this.snaplen,this.promiscous,this.timeout,new StringBuilder());
     }
 
-    @Async("taskExecutor")
     public void start(){
         PcapPacketHandler<String> jpacketHandler = (packet, user) -> {
             PcapPacket permanent = new PcapPacket(JMemory.Type.POINTER);
@@ -32,11 +31,18 @@ public class RealCapture implements FlowGenListener {
             System.out.println("TrafficFlowWorker:60L"+permanent);
             flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, true, false),"label");
         };
+
         pcap.loop(Pcap.DISPATCH_BUFFER_FULL, jpacketHandler, "");
     }
 
     public void stop(){
         pcap.breakloop();
+        List<double[]> doubles = flowGen.dumpLabeledFlowInstances(80);
+        for (double[] aDouble : doubles) {
+            for (int i = 0; i < aDouble.length; i++) {
+                System.out.print(aDouble[i]+",");
+            }
+        }
     }
     public int doInBackground(String device,int stopid) {
 

@@ -500,11 +500,10 @@ public class FlowAnalysisService {
         this.ifName = ifname;
     }
 
-    public int startCap() {
+    public void startCap() {
         String name = this.ifName.substring(0,this.ifName.indexOf("("));
         realCapture.open(name);
         realCapture.start();
-        return 1;
     }
 
     public void stopCap(){

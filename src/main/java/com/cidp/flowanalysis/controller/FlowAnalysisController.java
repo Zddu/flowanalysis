@@ -190,12 +190,8 @@ public class FlowAnalysisController {
     }
 
     @GetMapping("/startcap")
-    public RespBean startCap(){
-        if (flowAnalysisService.startCap()==1){
-            return RespBean.ok("开始捕获");
-        }else{
-            return RespBean.error("捕获失败");
-        }
+    public void startCap(){
+        flowAnalysisService.startCap();
     }
 
     @GetMapping("/stopcap")
