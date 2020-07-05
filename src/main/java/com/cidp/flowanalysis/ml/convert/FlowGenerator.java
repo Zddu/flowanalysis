@@ -1,5 +1,6 @@
 package com.cidp.flowanalysis.ml.convert;
 
+import com.cidp.flowanalysis.model.Feature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -128,33 +129,7 @@ public class FlowGenerator {
         }
     }
 
-    /*public void dumpFlowBasedFeatures(String path, String filename,String header){
-    	BasicFlow   flow;
-    	try {
-    		System.out.println("TOTAL Flows: "+(finishedFlows.size()+currentFlows.size()));
-    		FileOutputStream output = new FileOutputStream(new File(path+filename));
 
-    		output.write((header+"\n").getBytes());
-    		Set<Integer> fkeys = finishedFlows.keySet();
-			for(Integer key:fkeys){
-	    		flow = finishedFlows.get(key);
-	    		if(flow.packetCount()>1)
-	    			output.write((flow.dumpFlowBasedFeaturesEx()+"\n").getBytes());
-			}
-			Set<String> ckeys = currentFlows.keySet();
-			for(String key:ckeys){
-	    		flow = currentFlows.get(key);
-	    		if(flow.packetCount()>1)
-	    			output.write((flow.dumpFlowBasedFeaturesEx()+"\n").getBytes());
-			}
-
-			output.flush();
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-    }*/
 
     public int dumpLabeledFlowBasedFeatures(String path, String filename,String header,String label){
         BasicFlow   flow;
@@ -202,7 +177,13 @@ public class FlowGenerator {
 
         return total;
     }
-
+    public List<Feature> dumpLabeledFlowInstances(){
+        List<Feature> datas = new ArrayList<>();
+        for (BasicFlow flow : currentFlows.values()) {
+            datas.add(flow.dumpFlowBasedFeatures());
+        }
+        return datas;
+    }
     public List<double[]> dumpLabeledFlowInstances(int nums){
         List<double[]> datas = new ArrayList<>();
         for (BasicFlow flow : currentFlows.values()) {

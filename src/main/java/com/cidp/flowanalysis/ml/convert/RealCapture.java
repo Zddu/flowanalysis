@@ -1,5 +1,6 @@
 package com.cidp.flowanalysis.ml.convert;
 
+import com.cidp.flowanalysis.model.Feature;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapHandler;
 import org.jnetpcap.nio.JMemory;
@@ -35,14 +36,13 @@ public class RealCapture implements FlowGenListener {
         pcap.loop(Pcap.DISPATCH_BUFFER_FULL, jpacketHandler, "");
     }
 
-    public void stop(){
+    public List<Feature> stop(){
         pcap.breakloop();
-        List<double[]> doubles = flowGen.dumpLabeledFlowInstances(80);
-        for (double[] aDouble : doubles) {
-            for (int i = 0; i < aDouble.length; i++) {
-                System.out.print(aDouble[i]+",");
-            }
+        List<Feature> doubles = flowGen.dumpLabeledFlowInstances();
+        for (Feature aDouble : doubles) {
+            System.out.println(aDouble.toString());
         }
+        return doubles;
     }
     public int doInBackground(String device,int stopid) {
 

@@ -10,10 +10,7 @@ import com.cidp.flowanalysis.ml.mlgen.Sampling;
 import com.cidp.flowanalysis.ml.util.GenInstances;
 import com.cidp.flowanalysis.ml.util.Utils;
 import com.cidp.flowanalysis.ml.util.getCurrentPath;
-import com.cidp.flowanalysis.model.Algorithm;
-import com.cidp.flowanalysis.model.EvaReasult;
-import com.cidp.flowanalysis.model.Pie;
-import com.cidp.flowanalysis.model.Prediction;
+import com.cidp.flowanalysis.model.*;
 import org.apache.commons.io.IOUtils;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
@@ -506,7 +503,7 @@ public class FlowAnalysisService {
         realCapture.start();
     }
 
-    public void stopCap(){
-        realCapture.stop();
+    public List<Feature> stopCap(){
+        return realCapture.stop();
     }
 }

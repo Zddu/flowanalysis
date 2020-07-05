@@ -1,6 +1,7 @@
 package com.cidp.flowanalysis.ml.convert;
 
 import com.cidp.flowanalysis.ml.util.DateFormatter;
+import com.cidp.flowanalysis.model.Feature;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.jnetpcap.packet.format.FormatUtils;
 
@@ -581,6 +582,157 @@ public class BasicFlow {
         }
     }
 
+    public  Feature dumpFlowBasedFeatures() {
+        long flowDuration = this.flowLastSeen - this.flowStartTime;
+        Feature feature = new Feature();
+        feature.setAttr0(getSrcPort());
+        feature.setAttr1(getDstPort());
+        feature.setAttr2(getProtocol());
+        feature.setAttr3(flowDuration);
+        feature.setAttr4(this.fwdPktStats.getN());
+        feature.setAttr5(this.bwdPktStats.getN());
+        feature.setAttr6(this.fwdPktStats.getSum());
+        feature.setAttr7(this.bwdPktStats.getSum());
+
+
+
+        if (fwdPktStats.getN() > 0L) {
+            feature.setAttr8(this.fwdPktStats.getMax());
+            feature.setAttr9(this.fwdPktStats.getMin());
+            feature.setAttr10(this.fwdPktStats.getMean());
+            feature.setAttr11(this.fwdPktStats.getStandardDeviation());
+        } else {
+            feature.setAttr8(0);
+            feature.setAttr9(0);
+            feature.setAttr10(0);
+            feature.setAttr11(0);
+        }
+        if (bwdPktStats.getN() > 0L) {
+            feature.setAttr12(this.bwdPktStats.getMax());
+            feature.setAttr13(this.bwdPktStats.getMin());
+            feature.setAttr14(this.bwdPktStats.getMean());
+            feature.setAttr15(this.bwdPktStats.getStandardDeviation());
+        } else {
+            feature.setAttr12(0);
+            feature.setAttr13(0);
+            feature.setAttr14(0);
+            feature.setAttr15(0);
+        }
+        feature.setAttr16(((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L));
+        feature.setAttr17(((double) packetCount()) / ((double) flowDuration / 1000000L));
+        feature.setAttr18(this.flowIAT.getMean());
+        feature.setAttr19(this.flowIAT.getStandardDeviation());
+        feature.setAttr20(this.flowIAT.getMax());
+        feature.setAttr21(this.flowIAT.getMin());
+        if (this.forward.size() > 1) {
+            feature.setAttr22(this.forwardIAT.getSum());
+            feature.setAttr23(this.forwardIAT.getMean());
+            feature.setAttr24(this.forwardIAT.getStandardDeviation());
+            feature.setAttr25(this.forwardIAT.getMax());
+            feature.setAttr26(this.forwardIAT.getMin());
+        } else {
+            feature.setAttr22(0);
+            feature.setAttr23(0);
+            feature.setAttr24(0);
+            feature.setAttr25(0);
+            feature.setAttr26(0);
+        }
+        if (this.backward.size() > 1) {
+            feature.setAttr27(this.backwardIAT.getSum());
+            feature.setAttr28(this.backwardIAT.getMean());
+            feature.setAttr29(this.backwardIAT.getStandardDeviation());
+            feature.setAttr30(this.backwardIAT.getMax());
+            feature.setAttr31(this.backwardIAT.getMin());
+        } else {
+            feature.setAttr27(0);
+            feature.setAttr28(0);
+            feature.setAttr29(0);
+            feature.setAttr30(0);
+            feature.setAttr31(0);
+        }
+        feature.setAttr32(this.fPSH_cnt);
+        feature.setAttr33(this.bPSH_cnt);
+        feature.setAttr34(this.fURG_cnt);
+        feature.setAttr35(this.bURG_cnt);
+
+        feature.setAttr36(this.fHeaderBytes);
+        feature.setAttr37(this.bHeaderBytes);
+        feature.setAttr38(getfPktsPerSecond());
+        feature.setAttr39(getbPktsPerSecond());
+        if (this.forward.size() > 0 || this.backward.size() > 0) {
+            feature.setAttr40(this.flowLengthStats.getMin());
+            feature.setAttr41(this.flowLengthStats.getMax());
+            feature.setAttr42(this.flowLengthStats.getMean());
+            feature.setAttr43(this.flowLengthStats.getStandardDeviation());
+            feature.setAttr44(flowLengthStats.getVariance());
+        } else {
+            feature.setAttr40(0);
+            feature.setAttr41(0);
+            feature.setAttr42(0);
+            feature.setAttr43(0);
+            feature.setAttr44(0);
+        }
+
+        feature.setAttr45(flagCounts.get("FIN").value);
+        feature.setAttr46(flagCounts.get("SYN").value);
+        feature.setAttr47(flagCounts.get("RST").value);
+        feature.setAttr48(flagCounts.get("PSH").value);
+        feature.setAttr49(flagCounts.get("ACK").value);
+        feature.setAttr50(flagCounts.get("URG").value);
+        feature.setAttr51(flagCounts.get("CWR").value);
+        feature.setAttr52(flagCounts.get("ECE").value);
+
+        feature.setAttr53(getDownUpRatio());
+        feature.setAttr54(getAvgPacketSize());
+        feature.setAttr55(fAvgSegmentSize());
+        feature.setAttr56(bAvgSegmentSize());
+        feature.setAttr57(this.fHeaderBytes);
+
+        feature.setAttr58(fAvgBytesPerBulk());
+        feature.setAttr59(fAvgPacketsPerBulk());
+        feature.setAttr60(fAvgBulkRate());
+        feature.setAttr61(fAvgBytesPerBulk());
+        feature.setAttr62(bAvgPacketsPerBulk());
+        feature.setAttr63(bAvgBulkRate());
+
+
+        feature.setAttr64(getSflow_fpackets());
+        feature.setAttr65(getSflow_fbytes());
+        feature.setAttr66(getSflow_bpackets());
+        feature.setAttr67(getSflow_bbytes());
+
+        feature.setAttr68(this.Init_Win_bytes_forward);
+        feature.setAttr69(this.Init_Win_bytes_backward);
+        feature.setAttr70(this.Act_data_pkt_forward);
+        feature.setAttr71(this.min_seg_size_forward);
+
+        if (this.flowActive.getN() > 0) {
+            feature.setAttr72(this.flowActive.getMean());
+            feature.setAttr73(this.flowActive.getStandardDeviation());
+            feature.setAttr74(this.flowActive.getMax());
+            feature.setAttr75(this.flowActive.getMin());
+        } else {
+            feature.setAttr72(0);
+            feature.setAttr73(0);
+            feature.setAttr74(0);
+            feature.setAttr75(0);
+        }
+
+        if (this.flowIdle.getN() > 0) {
+            feature.setAttr76(this.flowIdle.getMean());
+            feature.setAttr77(this.flowIdle.getStandardDeviation());
+            feature.setAttr78(this.flowIdle.getMax());
+            feature.setAttr79(this.flowIdle.getMin());
+        } else {
+            feature.setAttr76(0);
+            feature.setAttr77(0);
+            feature.setAttr78(0);
+            feature.setAttr79(0);
+        }
+        feature.setLabel("NoLabel");
+        return feature;
+    }
+
     public  double[] dumpFlowBasedFeatures(int nums) {
         long flowDuration = this.flowLastSeen - this.flowStartTime;
         double[] data = new double[nums];
@@ -729,7 +881,6 @@ public class BasicFlow {
         }
         return data;
     }
-
     public int packetCount() {
         if (isBidirectional) {
             return (this.forward.size() + this.backward.size());
