@@ -36,6 +36,14 @@ public class RealCapture implements FlowGenListener {
         pcap.loop(Pcap.DISPATCH_BUFFER_FULL, jpacketHandler, "");
     }
 
+    public List<Feature> getBackFeatures() {
+        List<Feature> doubles = flowGen.dumpLabeledFlowInstances();
+        for (Feature aDouble : doubles) {
+            System.out.println(aDouble.toString());
+        }
+        return doubles;
+    }
+
     public List<Feature> stop(){
         pcap.breakloop();
         List<Feature> doubles = flowGen.dumpLabeledFlowInstances();
@@ -84,4 +92,6 @@ public class RealCapture implements FlowGenListener {
     public void onFlowGenerated(BasicFlow flow, String label) {
         new PropertyChangeSupport(this).firePropertyChange("flow",null,flow);
     }
+
+
 }

@@ -506,4 +506,8 @@ public class FlowAnalysisService {
     public List<Feature> stopCap(){
         return realCapture.stop();
     }
+
+    public List<Feature> showFeat() {
+        return realCapture.getBackFeatures();
+    }
 }

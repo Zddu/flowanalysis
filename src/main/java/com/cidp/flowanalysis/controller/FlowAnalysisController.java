@@ -196,7 +196,11 @@ public class FlowAnalysisController {
 
     @GetMapping("/stopcap")
     public RespBean stopCap(){
-        flowAnalysisService.stopCap();
-        return RespBean.ok("停止成功");
+        return RespBean.ok("停止成功", flowAnalysisService.stopCap());
+    }
+
+    @GetMapping("/showfeat")
+    public List<Feature> showFeat(){
+        return flowAnalysisService.showFeat();
     }
 }
