@@ -191,7 +191,6 @@ public class FlowAnalysisController {
 
     @GetMapping("/startcap")
     public RespBean startCap(){
-        System.out.println(1);
         if (flowAnalysisService.startCap()==1){
             return RespBean.ok("开始捕获");
         }else{

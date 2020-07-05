@@ -1,13 +1,14 @@
 package com.cidp.flowanalysis.ml.convert;
 
 import org.jnetpcap.Pcap;
+import org.jnetpcap.PcapHandler;
 import org.jnetpcap.nio.JMemory;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
 import org.springframework.stereotype.Component;
 
 import java.beans.PropertyChangeSupport;
-import java.security.Principal;
+import java.nio.ByteBuffer;
 
 @Component
 public class RealCapture implements FlowGenListener {
@@ -24,22 +25,23 @@ public class RealCapture implements FlowGenListener {
         StringBuilder errbuf = new StringBuilder();
 
         Pcap pcap = Pcap.openLive(device, snaplen, promiscous, timeout, errbuf);
+
+        if (stopid==0){
+            System.out.println(2);
+            pcap.breakloop();
+        }
         if (pcap == null) {
             return -2;
         }
-
+        System.out.println(1);
         PcapPacketHandler<String> jpacketHandler = (packet, user) -> {
             PcapPacket permanent = new PcapPacket(JMemory.Type.POINTER);
             packet.transferStateAndDataTo(permanent);
             System.out.println("TrafficFlowWorker:60L"+permanent);
             flowGen.addPacket(PacketReader.getBasicPacketInfo(permanent, true, false),"label");
-            if (stopid==0){
-                pcap.breakloop();
-            }
         };
-
         int ret = pcap.loop(Pcap.DISPATCH_BUFFER_FULL, jpacketHandler, device);
-        System.out.println(ret);
+        System.out.println("ret:"+ret);
         return 1;
     }
 

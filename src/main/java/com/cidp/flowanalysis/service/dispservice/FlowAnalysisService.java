@@ -491,7 +491,7 @@ public class FlowAnalysisService {
             throw new Exception(errbuf.toString());
         }
         for (PcapIf anIf : ifs) {
-            ifnames.add(anIf.getName());
+            ifnames.add(anIf.getName()+"("+anIf.getDescription()+")");
         }
         return ifnames;
     }
@@ -501,7 +501,9 @@ public class FlowAnalysisService {
     }
 
     public int startCap() {
-        return realCapture.doInBackground(this.ifName,1);
+        String name = this.ifName.substring(0,this.ifName.indexOf("("));
+        System.out.println(name);
+        return realCapture.doInBackground(name,1);
     }
 
     public void stopCap(){
