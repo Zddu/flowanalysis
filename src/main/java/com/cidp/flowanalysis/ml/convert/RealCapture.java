@@ -1,12 +1,12 @@
 package com.cidp.flowanalysis.ml.convert;
 
+import com.cidp.flowanalysis.mapper.InstancesMapper;
 import com.cidp.flowanalysis.model.Feature;
 import org.jnetpcap.Pcap;
-import org.jnetpcap.PcapHandler;
 import org.jnetpcap.nio.JMemory;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.beans.PropertyChangeSupport;
@@ -14,6 +14,8 @@ import java.util.List;
 
 @Component
 public class RealCapture implements FlowGenListener {
+    @Autowired
+    InstancesMapper instancesMapper;
     private int snaplen = 64 * 1024;
     private int promiscous = Pcap.MODE_PROMISCUOUS;
     private int timeout = 60 * 1000;
@@ -46,6 +48,7 @@ public class RealCapture implements FlowGenListener {
 
     public List<Feature> stop(){
         pcap.breakloop();
+        instancesMapper.insertInstances(flowGen.dumpLabeledFlowInstances());
         List<Feature> doubles = flowGen.dumpLabeledFlowInstances();
         for (Feature aDouble : doubles) {
             System.out.println(aDouble.toString());
