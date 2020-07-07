@@ -203,4 +203,19 @@ public class FlowAnalysisController {
     public List<Feature> showFeat(){
         return flowAnalysisService.showFeat();
     }
+
+    @GetMapping("/startanalysis")
+    public RespBean startAnalysis() throws IOException {
+        if (flowAnalysisService.fromDataBase()==1){
+            return RespBean.ok("分类完成！");
+        }else if (flowAnalysisService.fromDataBase()==0){
+            return RespBean.error("文件未找到！");
+        }else if (flowAnalysisService.fromDataBase()==-1){
+            return RespBean.error("模型读取失败！");
+        }else if (flowAnalysisService.fromDataBase()==-2){
+            return RespBean.error("分类失败，测试数据有误！");
+        }else {
+            return RespBean.error("数据库异常！");
+        }
+    }
 }

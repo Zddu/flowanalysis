@@ -31,6 +31,30 @@ public class GenInstances {
     private String name;
     public  final String DATASETPATH = "C:\\Users\\Administrator\\Desktop\\1\\genarff.arff";
 
+    public Instances warpperHeader(Instances instances){
+        ArrayList<Attribute> atts = new ArrayList<Attribute>();
+        for (int i=0;i<80;i++) {
+            String attr = "attr"+i;
+            atts.add(new Attribute(attr));
+        }
+        ArrayList<String> values = new ArrayList<String>();
+        values.add("DATABASE");
+        values.add("HTTP");
+        values.add("HTTPs");
+        values.add("MAIL");
+        values.add("MULTIMEDIA");
+        values.add("P2P");
+        values.add("WWW");
+        values.add("FTPRETR");
+        values.add("ssh");
+        values.add("ATTACK");
+        atts.add(new Attribute("label", values));
+        Instances head_struct = new Instances("flow_analysis", atts, 0);
+        head_struct.setClassIndex(head_struct.numAttributes() - 1);
+        head_struct.addAll(instances);
+        return head_struct;
+    }
+
     public  Instances GenAttr(List<String> labels, String path, String label) throws IOException {
         FlowGenerator flowGen = new FlowGenerator(true, 120000000L, 5000000L);
         boolean readIP6 = false;

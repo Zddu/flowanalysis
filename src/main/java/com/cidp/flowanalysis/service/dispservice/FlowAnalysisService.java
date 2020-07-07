@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import weka.classifiers.Classifier;
@@ -23,11 +24,13 @@ import weka.classifiers.lazy.IBk;
 import weka.classifiers.misc.InputMappedClassifier;
 import weka.classifiers.trees.J48;
 import weka.core.Debug;
+import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ArffLoader;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.CSVLoader;
+import weka.core.converters.DatabaseLoader;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Normalize;
 
@@ -54,7 +57,13 @@ public class FlowAnalysisService {
     private static Map<String, Integer> map;
     private static List<Prediction> predictions;
     private String ifName;
-    private Pcap pcap;
+
+    @Value("${spring.datasource.url}")
+    private String url;
+    @Value("${spring.datasource.username}")
+    private String username;
+    @Value("${spring.datasource.password}")
+    private String password;
 
     @Autowired
     AlgorithmMapper algorithmMapper;
@@ -509,5 +518,72 @@ public class FlowAnalysisService {
 
     public List<Feature> showFeat() {
         return realCapture.getBackFeatures();
+    }
+
+    public int fromDataBase() throws IOException {
+        DatabaseLoader loader = null;
+        try {
+            loader = new DatabaseLoader();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+        loader.setSource(url, username, password);
+        loader.setQuery("select * from instances");
+        loader.setKeys("attr0");
+        Instances structure = null;
+        try {
+            structure = loader.getStructure();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return 0;
+        }
+        Instances datainst = new Instances(structure);
+        Instance inst;
+        while ((inst = loader.getNextInstance(structure)) != null){
+            datainst.add(inst);
+        }
+        File folder = null;
+        try {
+            folder = new File(getCurrentPath.getPath());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return 0;//文件未找到
+        }
+        DecimalFormat df = new DecimalFormat("#.00");
+        String ppath = folder.getParentFile().getParent() + "/model/";
+        InputMappedClassifier imc = new InputMappedClassifier();
+        imc.setSuppressMappingReport(true);
+        try {
+            imc.setModelPath(ppath + "2" + Model_File);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;//模型读取失败
+        }
+        Instances hasheader = genInstances.warpperHeader(datainst);
+        hasheader.setClassIndex(datainst.numAttributes() - 1);
+        Instances labeled = new Instances(hasheader);
+        List<String> list = new ArrayList<>();
+        List<Prediction> list1 = new ArrayList<>();
+        Prediction pre;
+        for (int i = 0; i < labeled.numInstances(); i++) {
+            pre = new Prediction();
+            double clsLabel = 0;
+            try {
+                clsLabel = imc.classifyInstance(imc.constructMappedInstance(labeled.instance(i)));
+                pre.setPrediction(Double.parseDouble(df.format(Utils.MAX(imc.distributionForInstance(imc.constructMappedInstance(labeled.instance(i)))))));
+                pre.setName(labeled.instance(i).toString(labeled.classIndex()));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return -2;//分类失败，测试数据有误！
+            }
+            labeled.instance(i).setClassValue(clsLabel);
+            list.add(labeled.instance(i).toString(labeled.classIndex()));
+            list1.add(pre);
+        }
+        predictions = list1;
+        map = Utils.frequencyOfListElements(list);
+        data = labeled;
+        return 1;
     }
 }
