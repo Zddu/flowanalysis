@@ -561,7 +561,7 @@ public class FlowAnalysisService {
             return -1;//模型读取失败
         }
         Instances hasheader = genInstances.warpperHeader(datainst);
-        hasheader.setClassIndex(datainst.numAttributes() - 1);
+        hasheader.setClassIndex(hasheader.numAttributes() - 1);
         Instances labeled = new Instances(hasheader);
         List<String> list = new ArrayList<>();
         List<Prediction> list1 = new ArrayList<>();
