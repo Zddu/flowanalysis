@@ -37,16 +37,16 @@ public class GenInstances {
             String attr = "attr"+i;
             atts.add(new Attribute(attr));
         }
+        //DATABASE,FTP,GAME,MAIL,MULTIMEDIA,P2P,SERVICE,WWW,ATTACK
         ArrayList<String> values = new ArrayList<String>();
         values.add("DATABASE");
-        values.add("HTTP");
-        values.add("HTTPs");
+        values.add("FTP");
+        values.add("GAME");
         values.add("MAIL");
         values.add("MULTIMEDIA");
         values.add("P2P");
+        values.add("SERVICE");
         values.add("WWW");
-        values.add("FTPRETR");
-        values.add("ssh");
         values.add("ATTACK");
         atts.add(new Attribute("label", values));
         Instances head_struct = new Instances("flow_analysis", atts, 0);
