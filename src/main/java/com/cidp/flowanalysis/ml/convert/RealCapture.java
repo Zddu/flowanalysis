@@ -48,11 +48,7 @@ public class RealCapture implements FlowGenListener {
     public List<Feature> stop(){
         pcap.breakloop();
         instancesMapper.insertInstances(flowGen.dumpLabeledFlowInstances());
-        List<Feature> doubles = flowGen.dumpLabeledFlowInstances();
-        for (Feature aDouble : doubles) {
-            System.out.println(aDouble.toString());
-        }
-        return doubles;
+        return  flowGen.dumpLabeledFlowInstances();
     }
     public int doInBackground(String device,int stopid) {
 

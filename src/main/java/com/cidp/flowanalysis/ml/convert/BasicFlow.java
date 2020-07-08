@@ -781,7 +781,7 @@ public class BasicFlow {
             feature.setAttr78(0);
             feature.setAttr79(0);
         }
-        feature.setLabel("NoLabel");
+        feature.setLabel("WWW");
         return feature;
     }
 
