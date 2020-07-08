@@ -28,6 +28,7 @@ public class RealCapture implements FlowGenListener {
     }
 
     public void start(){
+        instancesMapper.deleteAll();
         PcapPacketHandler<String> jpacketHandler = (packet, user) -> {
             PcapPacket permanent = new PcapPacket(JMemory.Type.POINTER);
             packet.transferStateAndDataTo(permanent);
