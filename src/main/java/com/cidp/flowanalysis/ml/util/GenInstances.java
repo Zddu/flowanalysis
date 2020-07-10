@@ -70,19 +70,18 @@ public class GenInstances {
                 break;
             }
         }
-        List<double[]> doubles = flowGen.dumpLabeledFlowInstances(80);
+        List<double[]> doubles = flowGen.dumpLabeledFlowInstances(79);
 
         ArrayList<Attribute> atts = new ArrayList<Attribute>();
-        for (FlowFeature feature : FlowFeature.values()) {
-            atts.add(new Attribute(feature.getAbbr()));
+        for (int i = 0; i < 79; i++) {
+            String name = "attr"+i;
+            atts.add(new Attribute(name));
         }
+
         ArrayList<String> values = new ArrayList<String>();
         values.addAll(labels);
         atts.add(new Attribute("label", values));
-        atts.remove(0);
-        atts.remove(1);
-        atts.remove(3);
-        atts.remove(6);
+
         Instances rel_struct = new Instances("flow_analysis", atts, 0);
         rel_struct.setClassIndex(rel_struct.numAttributes() - 1);
 
@@ -91,7 +90,7 @@ public class GenInstances {
             for (int i = 0; i < aDouble.length; i++) {
                 data[i] = aDouble[i];
             }
-            data[80] = rel_struct.attribute(80).indexOfValue(label);
+            data[79] = rel_struct.attribute(79).indexOfValue(label);
             Instance inst = new DenseInstance(1.0, data);
             rel_struct.add(inst);
         }

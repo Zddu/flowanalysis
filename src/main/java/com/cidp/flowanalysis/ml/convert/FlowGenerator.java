@@ -191,29 +191,18 @@ public class FlowGenerator {
         }
         return datas;
     }
-    public long dumpLabeledCurrentFlow(String fileFullPath,String label) {
-        if (fileFullPath == null ) {
-            String ex = String.format("fullFilePath=%s,filename=%s", fileFullPath);
-            throw new IllegalArgumentException(ex);
-        }
-
+    public void dumpLabeledCurrentFlow(String fileFullPath,String label) {
         File file = new File(fileFullPath);
         FileOutputStream output = null;
-        int total = 0;
         try {
             if (file.exists()) {
                 output = new FileOutputStream(file, true);
             }else{
                 output = new FileOutputStream(file);
-//                output.write((header + LINE_SEP).getBytes());
-//                if (file.createNewFile()) {
-//
-//                }
             }
             for (BasicFlow flow : currentFlows.values()) {
                 if(flow.packetCount()>1) {
                     output.write((flow.dumpFlowBasedFeaturesEx(label) + LINE_SEP).getBytes());
-                    total++;
                 }
             }
         } catch (IOException e) {
@@ -230,7 +219,6 @@ public class FlowGenerator {
                 logger.debug(e.getMessage());
             }
         }
-        return total;
     }
 
     private int getFlowCount(){

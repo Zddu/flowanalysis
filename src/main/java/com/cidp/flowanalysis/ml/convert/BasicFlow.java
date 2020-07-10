@@ -888,48 +888,48 @@ public class BasicFlow {
         data[54] = getAvgPacketSize();
         data[55] = fAvgSegmentSize();
         data[56] = bAvgSegmentSize();
-        data[57] = this.fHeaderBytes;  //this feature is duplicated
+//        data[57] = this.fHeaderBytes;  //this feature is duplicated
 
 
-        data[58] = fAvgBytesPerBulk();
-        data[59] = fAvgPacketsPerBulk();
-        data[60] = fAvgBulkRate();
-        data[61] = fAvgBytesPerBulk() ;
-        data[62] = bAvgPacketsPerBulk();
-        data[63] = bAvgBulkRate();
+        data[57] = fAvgBytesPerBulk();
+        data[58] = fAvgPacketsPerBulk();
+        data[59] = fAvgBulkRate();
+        data[60] = fAvgBytesPerBulk() ;
+        data[61] = bAvgPacketsPerBulk();
+        data[62] = bAvgBulkRate();
 
-        data[64] = getSflow_fpackets() ;
-        data[65] = getSflow_fbytes();
-        data[66] = getSflow_bpackets();
-        data[67] = getSflow_bbytes();
+        data[63] = getSflow_fpackets() ;
+        data[64] = getSflow_fbytes();
+        data[65] = getSflow_bpackets();
+        data[66] = getSflow_bbytes();
 
-        data[68] = this.Init_Win_bytes_forward ;
-        data[69] = this.Init_Win_bytes_backward ;
-        data[70] = this.Act_data_pkt_forward;
-        data[71] = this.min_seg_size_forward;
+        data[67] = this.Init_Win_bytes_forward ;
+        data[68] = this.Init_Win_bytes_backward ;
+        data[69] = this.Act_data_pkt_forward;
+        data[70] = this.min_seg_size_forward;
 
         if (this.flowActive.getN() > 0) {
-            data[72] = this.flowActive.getMean();
-            data[73] = this.flowActive.getStandardDeviation();
-            data[74] = this.flowActive.getMax();
-            data[75] = this.flowActive.getMin();
+            data[71] = this.flowActive.getMean();
+            data[72] = this.flowActive.getStandardDeviation();
+            data[73] = this.flowActive.getMax();
+            data[74] = this.flowActive.getMin();
         } else {
+            data[71] = 0;
             data[72] = 0;
             data[73] = 0;
             data[74] = 0;
-            data[75] = 0;
         }
 
         if (this.flowIdle.getN() > 0) {
-            data[76] = this.flowIdle.getMean();
-            data[77] = this.flowIdle.getStandardDeviation();
-            data[78] = this.flowIdle.getMax();
-            data[79] = this.flowIdle.getMin();
+            data[75] = this.flowIdle.getMean();
+            data[76] = this.flowIdle.getStandardDeviation();
+            data[77] = this.flowIdle.getMax();
+            data[78] = this.flowIdle.getMin();
         } else {
+            data[75] = 0;
             data[76] = 0;
             data[77] = 0;
             data[78] = 0;
-            data[79] = 0;
         }
         return data;
     }
