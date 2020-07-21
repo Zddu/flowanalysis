@@ -621,7 +621,7 @@ public class BasicFlow {
         if (Double.isNaN(((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L))){
             feature.setAttr16(0);
         }else if (Double.compare( ((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L),Double.POSITIVE_INFINITY )==0){
-            feature.setAttr16(0);
+            feature.setAttr16(1);
         }else if (Double.compare( ((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L), Double.NEGATIVE_INFINITY)==0){
             feature.setAttr16(0);
         }else {
@@ -631,7 +631,7 @@ public class BasicFlow {
         if (Double.isNaN(((double) packetCount()) / ((double) flowDuration / 1000000L))){
             feature.setAttr17(0);
         }else if (Double.compare( ((double) packetCount()) / ((double) flowDuration / 1000000L),Double.POSITIVE_INFINITY )==0){
-            feature.setAttr17(0);
+            feature.setAttr17(1);
         }else if (Double.compare( ((double) packetCount()) / ((double) flowDuration / 1000000L), Double.NEGATIVE_INFINITY)==0){
             feature.setAttr17(0);
         }else {
@@ -640,7 +640,7 @@ public class BasicFlow {
         if (Double.isNaN(this.flowIAT.getMean())){
             feature.setAttr18(0);
         }else if (Double.compare( this.flowIAT.getMean(),Double.POSITIVE_INFINITY )==0){
-            feature.setAttr18(0);
+            feature.setAttr18(1);
         }else if (Double.compare( this.flowIAT.getMean(), Double.NEGATIVE_INFINITY)==0){
             feature.setAttr18(0);
         }else {
@@ -649,7 +649,7 @@ public class BasicFlow {
         if (Double.isNaN(this.flowIAT.getStandardDeviation())){
             feature.setAttr19(0);
         }else if (Double.compare( this.flowIAT.getStandardDeviation(),Double.POSITIVE_INFINITY )==0){
-            feature.setAttr19(0);
+            feature.setAttr19(1);
         }else if (Double.compare( this.flowIAT.getStandardDeviation(), Double.NEGATIVE_INFINITY)==0){
             feature.setAttr19(0);
         }else {
@@ -659,7 +659,7 @@ public class BasicFlow {
         if (Double.isNaN(this.flowIAT.getMax())){
             feature.setAttr20(0);
         }else if (Double.compare( this.flowIAT.getMax(),Double.POSITIVE_INFINITY )==0){
-            feature.setAttr20(0);
+            feature.setAttr20(1);
         }else if (Double.compare( this.flowIAT.getMax(), Double.NEGATIVE_INFINITY)==0){
             feature.setAttr20(0);
         }else {
@@ -669,7 +669,7 @@ public class BasicFlow {
         if (Double.isNaN(this.flowIAT.getMin())){
             feature.setAttr21(0);
         }else if (Double.compare( this.flowIAT.getMin(),Double.POSITIVE_INFINITY )==0){
-            feature.setAttr21(0);
+            feature.setAttr21(1);
         }else if (Double.compare( this.flowIAT.getMin(), Double.NEGATIVE_INFINITY)==0){
             feature.setAttr21(0);
         }else {
