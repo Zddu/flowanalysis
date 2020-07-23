@@ -818,13 +818,64 @@ public class BasicFlow {
             data[14] = 0;
             data[15] = 0;
         }
+        if (Double.isNaN(((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L))){
+            data[16]=0;
+        }else if (Double.compare( ((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L),Double.POSITIVE_INFINITY )==0){
+            data[16]=1;
+        }else if (Double.compare( ((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L), Double.NEGATIVE_INFINITY)==0){
+            data[16]=0;
+        }else {
+            data[16]=((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L);
+        }
 
-        data[16]= ((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L);
-        data[17]= ((double) packetCount()) / ((double) flowDuration / 1000000L);
-        data[18]= this.flowIAT.getMean();
-        data[19]= this.flowIAT.getStandardDeviation();
-        data[20]= this.flowIAT.getMax() ;
-        data[21]= this.flowIAT.getMin();
+        if (Double.isNaN(((double) packetCount()) / ((double) flowDuration / 1000000L))){
+            data[17] = 0;
+        }else if (Double.compare( ((double) packetCount()) / ((double) flowDuration / 1000000L),Double.POSITIVE_INFINITY )==0){
+            data[17] = 1;
+        }else if (Double.compare( ((double) packetCount()) / ((double) flowDuration / 1000000L), Double.NEGATIVE_INFINITY)==0){
+            data[17] = 0;
+        }else {
+            data[17] = ((double) packetCount()) / ((double) flowDuration / 1000000L);
+        }
+        if (Double.isNaN(this.flowIAT.getMean())){
+            data[18] = 0;
+        }else if (Double.compare( this.flowIAT.getMean(),Double.POSITIVE_INFINITY )==0){
+            data[18] = 1;
+        }else if (Double.compare( this.flowIAT.getMean(), Double.NEGATIVE_INFINITY)==0){
+            data[18] = 0;
+        }else {
+            data[18]= this.flowIAT.getMean();
+        }
+        if (Double.isNaN(this.flowIAT.getStandardDeviation())){
+            data[19] = 0;
+        }else if (Double.compare( this.flowIAT.getStandardDeviation(),Double.POSITIVE_INFINITY )==0){
+            data[19] = 1;
+        }else if (Double.compare( this.flowIAT.getStandardDeviation(), Double.NEGATIVE_INFINITY)==0){
+            data[19] = 0;
+        }else {
+            data[19]= this.flowIAT.getStandardDeviation();
+        }
+
+        if (Double.isNaN(this.flowIAT.getMax())){
+            data[20]=0;
+        }else if (Double.compare( this.flowIAT.getMax(),Double.POSITIVE_INFINITY )==0){
+            data[20]=1;
+        }else if (Double.compare( this.flowIAT.getMax(), Double.NEGATIVE_INFINITY)==0){
+            data[20]=0;
+        }else {
+            data[20]= this.flowIAT.getMax() ;
+        }
+
+        if (Double.isNaN(this.flowIAT.getMin())){
+            data[21] = 0;
+        }else if (Double.compare( this.flowIAT.getMin(),Double.POSITIVE_INFINITY )==0){
+            data[21] = 1;
+        }else if (Double.compare( this.flowIAT.getMin(), Double.NEGATIVE_INFINITY)==0){
+            data[21] = 0;
+        }else {
+            data[21]= this.flowIAT.getMin();
+        }
+
         if (this.forward.size() > 1) {
             data[22]= this.forwardIAT.getSum();
             data[23]= this.forwardIAT.getMean();
@@ -1321,12 +1372,63 @@ public class BasicFlow {
             dump.append(0).append(separator);
             dump.append(0).append(separator);
         }
-        dump.append(((double) (forwardBytes + backwardBytes)) / ((double) flowDuration / 1000000L)).append(separator);//21
-        dump.append(((double) packetCount()) / ((double) flowDuration / 1000000L)).append(separator);//22
-        dump.append(flowIAT.getMean()).append(separator);                            //23
-        dump.append(flowIAT.getStandardDeviation()).append(separator);                //24
-        dump.append(flowIAT.getMax()).append(separator);                            //25
-        dump.append(flowIAT.getMin()).append(separator);                            //26
+        if (Double.isNaN(((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L))){
+            dump.append(0).append(separator);
+        }else if (Double.compare( ((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L),Double.POSITIVE_INFINITY )==0){
+            dump.append(1).append(separator);
+        }else if (Double.compare( ((double) (this.forwardBytes + this.backwardBytes)) / ((double) flowDuration / 1000000L), Double.NEGATIVE_INFINITY)==0){
+            dump.append(0).append(separator);
+        }else {
+            dump.append(((double) (forwardBytes + backwardBytes)) / ((double) flowDuration / 1000000L)).append(separator);//21
+        }
+
+        if (Double.isNaN(((double) packetCount()) / ((double) flowDuration / 1000000L))){
+            dump.append(0).append(separator);
+        }else if (Double.compare( ((double) packetCount()) / ((double) flowDuration / 1000000L),Double.POSITIVE_INFINITY )==0){
+            dump.append(1).append(separator);
+        }else if (Double.compare( ((double) packetCount()) / ((double) flowDuration / 1000000L), Double.NEGATIVE_INFINITY)==0){
+            dump.append(0).append(separator);
+        }else {
+            dump.append(((double) packetCount()) / ((double) flowDuration / 1000000L)).append(separator);//22
+        }
+        if (Double.isNaN(this.flowIAT.getMean())){
+            dump.append(0).append(separator);
+        }else if (Double.compare( this.flowIAT.getMean(),Double.POSITIVE_INFINITY )==0){
+            dump.append(1).append(separator);
+        }else if (Double.compare( this.flowIAT.getMean(), Double.NEGATIVE_INFINITY)==0){
+            dump.append(0).append(separator);
+        }else {
+            dump.append(flowIAT.getMean()).append(separator);                            //23
+        }
+        if (Double.isNaN(this.flowIAT.getStandardDeviation())){
+            dump.append(0).append(separator);
+        }else if (Double.compare( this.flowIAT.getStandardDeviation(),Double.POSITIVE_INFINITY )==0){
+            dump.append(1).append(separator);
+        }else if (Double.compare( this.flowIAT.getStandardDeviation(), Double.NEGATIVE_INFINITY)==0){
+            dump.append(0).append(separator);
+        }else {
+            dump.append(flowIAT.getStandardDeviation()).append(separator);                //24
+        }
+
+        if (Double.isNaN(this.flowIAT.getMax())){
+            dump.append(0).append(separator);
+        }else if (Double.compare( this.flowIAT.getMax(),Double.POSITIVE_INFINITY )==0){
+            dump.append(1).append(separator);
+        }else if (Double.compare( this.flowIAT.getMax(), Double.NEGATIVE_INFINITY)==0){
+            dump.append(0).append(separator);
+        }else {
+            dump.append(flowIAT.getMax()).append(separator);                            //25
+        }
+
+        if (Double.isNaN(this.flowIAT.getMin())){
+            dump.append(0).append(separator);
+        }else if (Double.compare( this.flowIAT.getMin(),Double.POSITIVE_INFINITY )==0){
+            dump.append(1).append(separator);
+        }else if (Double.compare( this.flowIAT.getMin(), Double.NEGATIVE_INFINITY)==0){
+            dump.append(0).append(separator);
+        }else {
+            dump.append(flowIAT.getMin()).append(separator);                            //26
+        }
 
         if (this.forward.size() > 1) {
             dump.append(forwardIAT.getSum()).append(separator);                        //27
