@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.flow.flowanalysis.mapper.ModelMapper">
+    <resultMap id="BaseInfoModel" type="com.flow.flowanalysis.model.Model">
+        <id column="id" property="id"/>
+        <result property="modelId" column="model_id" />
+    </resultMap>
+    <insert id="insertModeId">
+        insert into model(id,model_id)
+        values (#{id},#{mid})
+    </insert>
+    <select id="getAllModels" resultType="com.flow.flowanalysis.model.Algorithm">
+        select * from algorithm where id in (select model_id from model )
+    </select>
+</mapper>
