@@ -20,7 +20,7 @@ public class RealCapture implements FlowGenListener {
     private int promiscous = Pcap.MODE_PROMISCUOUS;
     private int timeout = 60 * 1000;
     private Pcap pcap;
-    private FlowGenerator flowGen = new FlowGenerator(true,120000000L, 5000000L);
+    private FlowGenerator flowGen;
 
 
     public void open(String device){
@@ -28,7 +28,8 @@ public class RealCapture implements FlowGenListener {
     }
 
     public void start(){
-        instancesMapper.deleteAll();
+//        instancesMapper.deleteAll();
+        flowGen = new FlowGenerator(true,120000000L, 5000000L);
         PcapPacketHandler<String> jpacketHandler = (packet, user) -> {
             PcapPacket permanent = new PcapPacket(JMemory.Type.POINTER);
             packet.transferStateAndDataTo(permanent);
